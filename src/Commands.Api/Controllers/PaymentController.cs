@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Domain.Services;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +13,17 @@ namespace Commands.Api.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
+        private readonly IPaymentService _paymentService;
+
+        public PaymentController(IPaymentService paymentService)
+        {
+            _paymentService = paymentService;
+        }
         // GET: api/<PaymentController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
+            _paymentService.GetAll();
             return new string[] { "value1", "value2" };
         }
 

@@ -30,25 +30,34 @@ namespace Projector.Elastic
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             
+            //accounts consumers
             var accountTask = _kafkaAccountConsumer.Consume(
                 (key,value) => {
                     var res = value;
                 },
                 stoppingToken);
 
+            var account2Task = new KafkaAccountConsumer().Consume(
+                (key, value) => {
+                    var res = value;
+                },
+                stoppingToken);
+
+            //payments consumers
             var paymentTask = _kafkaPaymentConsumer.Consume(
                 (key, value) => {
                     var res = value;
                 },
                 stoppingToken);
 
+            //persons consumers
             var personTask = _kafkaPersonConsumer.Consume(
                 (key, value) => {
                     var res = value;
                 },
                 stoppingToken);
 
-            return Task.WhenAny(accountTask, paymentTask, personTask);
+            return Task.WhenAny(accountTask, account2Task, paymentTask, personTask);
 
         }
     }

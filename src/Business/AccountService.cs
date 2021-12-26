@@ -14,25 +14,25 @@ namespace Business
     public class AccountService : IAccountService
     {
         private readonly IAccountDao _accountDao;
-        private readonly IKafkaAccountProducer _kafkaProducer;
+        private readonly IKafkaAccountProducer _kafkaAccountProducer;
 
         public AccountService(
             IAccountDao accountDao,
             IKafkaAccountProducer kafkaProducer)
         {
             _accountDao = accountDao;
-            _kafkaProducer = kafkaProducer;
+            _kafkaAccountProducer = kafkaProducer;
         }
 
         public Task<List<Account>> GetAll()
         {
-            _kafkaProducer.ProduceAsync(null, new UpdateAccountProjectionMessage
+            _kafkaAccountProducer.ProduceAsync(new UpdateAccountProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 AccountId = 1,
                 Name = "Тестовый",
                 PersonId = 2
-            }); ;
+            }); 
             return _accountDao.GetAll();
         }
 

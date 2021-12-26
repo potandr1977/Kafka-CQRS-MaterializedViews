@@ -6,7 +6,7 @@ namespace EventBus.Kafka
 {
     public class KafkaPersonConsumer : KafkaConsumer<string, UpdatePersonProjectionMessage>, IKafkaPersonConsumer
     {
-        public KafkaPersonConsumer():base(KafkaSettings.BusinessGroupId,KafkaSettings.PaymentTopicName)
+        public KafkaPersonConsumer():base(KafkaSettings.BusinessGroupId,KafkaSettings.PersonTopicName)
         {
         }
     }

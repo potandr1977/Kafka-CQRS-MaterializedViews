@@ -29,6 +29,9 @@ namespace Commands.Api
                 new MongoClient(MongoSettings.ConnectionString)
             );
             services.AddSingleton<IKafkaAccountProducer,KafkaAccountProducer>();
+            services.AddSingleton<IKafkaPaymentProducer, KafkaPaymentProducer>();
+            services.AddSingleton<IKafkaPersonProducer, KafkaPersonProducer>();
+
             services.AddDataAccessObjects();
             services.AddDomainServices();
 

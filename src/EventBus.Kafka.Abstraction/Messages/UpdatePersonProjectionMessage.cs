@@ -4,10 +4,8 @@ using System.Text;
 
 namespace EventBus.Kafka.Abstraction.Messages
 {
-    public class UpdatePersonProjectionMessage
+    public class UpdatePersonProjectionMessage : UpdateProjectionMessage
     {
-        public string Id { get; set; }
-
         public int PersonId { get; set; }
 
         public string Name {get; set; }

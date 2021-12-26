@@ -1,4 +1,5 @@
 ﻿using Confluent.Kafka;
+using EventBus.Kafka.Abstraction.Messages;
 using Settings;
 using System;
 using System.Text.Json;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EventBus.Kafka.Abstraction
 {
-    public class KafkaProducer<TKey, TValue> : IDisposable, IKafkaProducer<TKey, TValue> where TValue : class
+    public class KafkaProducer<TKey, TValue> : IDisposable, IKafkaProducer<TKey, TValue> where TValue : UpdateProjectionMessage
     {
         private readonly IProducer<TKey, TValue> _producer;
         private string _topicName;
@@ -38,8 +39,9 @@ namespace EventBus.Kafka.Abstraction
         /// <param name="key">Indicates message's key in Kafka topic</param>  
         /// <param name="value">Indicates message's value in Kafka topic</param>  
         /// <returns></returns>  
-        public async Task ProduceAsync(TKey key, TValue value)
+        public async Task ProduceAsync(TValue value)
         {
+            var key = default(TKey);
             await _producer.ProduceAsync(_topicName, new Message<TKey, TValue> { Key = key, Value = value });
         }
 

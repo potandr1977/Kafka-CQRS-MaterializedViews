@@ -6,7 +6,7 @@ namespace EventBus.Kafka
 {
     public class KafkaPaymentProducer: KafkaProducer<string, UpdatePaymentProjectionMessage>, IKafkaPaymentProducer
     {
-        public KafkaPaymentProducer():base(KafkaSettings.AccountTopicName)
+        public KafkaPaymentProducer():base(KafkaSettings.PaymentTopicName)
         {
         }
     }

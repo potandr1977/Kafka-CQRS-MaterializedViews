@@ -1,9 +1,7 @@
 ﻿namespace EventBus.Kafka.Abstraction.Messages
 {
-    public class UpdatePaymentProjectionMessage
+    public class UpdatePaymentProjectionMessage : UpdateProjectionMessage
     {
-        public string Id { get; set; }
-
         public int PaymentId { get; set; }
 
         public int AccountId { get; set; }

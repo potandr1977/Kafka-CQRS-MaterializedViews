@@ -6,7 +6,7 @@ namespace EventBus.Kafka
 {
     public class KafkaPersonProducer: KafkaProducer<string, UpdatePersonProjectionMessage>, IKafkaPersonProducer
     {
-        public KafkaPersonProducer():base(KafkaSettings.AccountTopicName)
+        public KafkaPersonProducer():base(KafkaSettings.PersonTopicName)
         {
         }
     }
