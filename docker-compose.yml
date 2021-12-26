@@ -1,0 +1,86 @@
+version: '3.4'
+
+services:
+  zookeeper:
+    image: zookeeper:3.4.9
+    container_name: zookeeper
+    hostname: zookeeper
+    ports:
+      - "2181:2181"
+    environment:
+        ZOO_MY_ID: 1
+        ZOO_PORT: 2181
+        ZOO_SERVERS: server.1=zookeeper:2888:3888
+    volumes:
+      - ./zk-single-kafka-multiple/zookeeper/data:/data
+      - ./zk-single-kafka-multiple/zookeeper/datalog:/datalog
+    networks:
+      - mynetwork
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper
+    networks:
+      - mynetwork
+
+  mongodb:
+    image: mongo:latest
+    ports:
+      - 27027:27017
+    container_name: accounting_mongodb
+    restart: always
+    environment:
+      - MONGO_INITDB_DATABASE=accdb
+    networks:
+      - mynetwork
+
+  elasticsearch:
+    image: 'elasticsearch:6.6.0'
+    ports:
+      - 9279:9200
+      - 9379:9300
+    container_name: accounting_elastic
+    restart: always
+    environment:
+      - discovery.type=single-node
+    networks:
+      - mynetwork
+
+  commands.api:
+    image: ${DOCKER_REGISTRY-}commandsapi
+    build:
+      context: .
+      dockerfile: src/Commands.Api/Dockerfile
+    networks:
+      - mynetwork
+
+  queries.api:
+    image: ${DOCKER_REGISTRY-}queriesapi
+    build:
+      context: .
+      dockerfile: src/Queries.Api/Dockerfile
+    networks:
+      - mynetwork
+
+  projector.elastic:
+    image: ${DOCKER_REGISTRY-}projectorelastic
+    build:
+      context: .
+      dockerfile: src/Projector.Elastic/Dockerfile
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+     driver: bridge
