@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace EventBus.Kafka.Abstraction.Messages
+﻿namespace EventBus.Kafka.Abstraction.Messages
 {
     public class UpdateAccountProjectionMessage : UpdateProjectionMessage
     {

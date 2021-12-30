@@ -4,9 +4,9 @@ using Settings;
 
 namespace EventBus.Kafka
 {
-    public class KafkaAccountProducer: KafkaProducer<string, UpdateAccountProjectionMessage>, IKafkaAccountProducer
+    public class KafkaAccountProducer: KafkaStrKeyProducer<UpdateAccountProjectionMessage>, IKafkaAccountProducer
     {
-        public KafkaAccountProducer():base(KafkaSettings.AccountTopicName)
+        public KafkaAccountProducer() : base(KafkaSettings.AccountTopicName)
         {
         }
     }

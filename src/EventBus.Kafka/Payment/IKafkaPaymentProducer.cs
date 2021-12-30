@@ -3,7 +3,7 @@ using EventBus.Kafka.Abstraction.Messages;
 
 namespace EventBus.Kafka
 {
-    public interface IKafkaPaymentProducer: IKafkaProducer<string,UpdatePaymentProjectionMessage>
+    public interface IKafkaPaymentProducer: IKafkaStrKeyProducer<UpdatePaymentProjectionMessage>
     {
     }
 }

@@ -11,24 +11,60 @@ services:
         ZOO_MY_ID: 1
         ZOO_PORT: 2181
         ZOO_SERVERS: server.1=zookeeper:2888:3888
+        ZOOKEEPER_TICK_TIME: 2000
+        ZOOKEEPER_SYNC_LIMIT: 2
     volumes:
       - ./zk-single-kafka-multiple/zookeeper/data:/data
       - ./zk-single-kafka-multiple/zookeeper/datalog:/datalog
     networks:
       - mynetwork
 
-  kafka:
+  kafka1:
     image: confluentinc/cp-kafka:latest
-    container_name: kafka
+    container_name: kafka1
     ports:
-      - 29092:29092
+      - 19092:19092
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka1:9092,PLAINTEXT_HOST://localhost:19092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+    depends_on:
+      - zookeeper
+    networks:
+      - mynetwork
+
+  kafka2:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka2
+    ports:
+      - 29092:29092
+    environment:
+      KAFKA_BROKER_ID: 102
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka2:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
+    depends_on:
+      - zookeeper
+    networks:
+      - mynetwork
+
+  kafka3:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka3
+    ports:
+      - 39092:39092
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka3:9092,PLAINTEXT_HOST://localhost:39092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 3
     depends_on:
       - zookeeper
     networks:
@@ -38,12 +74,12 @@ services:
     image: quay.io/cloudhut/kowl:v1.4.0
     container_name: kowl
     environment:
-      - KAFKA_BROKERS=kafka:9092
+      - KAFKA_BROKERS=kafka1:9092,kafka2:9092,kafka3:9092
     ports:
       - 8099:8080
     depends_on:
       - zookeeper
-      - kafka
+      - kafka1
 
   mongodb:
     image: mongo:latest

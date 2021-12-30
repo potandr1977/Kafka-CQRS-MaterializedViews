@@ -17,7 +17,7 @@ namespace EventBus.Kafka.Abstraction
         {
             _config = new ConsumerConfig
             {
-                BootstrapServers = $"{KafkaSettings.Host}:{KafkaSettings.Port}",
+                BootstrapServers = KafkaSettings.BootstrapServers,
                 GroupId = GroupId,
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };

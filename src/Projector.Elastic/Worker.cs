@@ -29,7 +29,6 @@ namespace Projector.Elastic
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            
             //accounts consumers
             var accountTask = _kafkaAccountConsumer.Consume(
                 (key,value) => {

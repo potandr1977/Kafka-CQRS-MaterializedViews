@@ -11,15 +11,12 @@ namespace EventBus.Kafka.Abstraction
     {
         private readonly IProducer<TKey, TValue> _producer;
         private string _topicName;
-        /// <summary>  
-        /// Initializes the producer  
-        /// </summary>  
-        /// <param name="config"></param>  
+
         public KafkaProducer(string Topic)
         {
             var config = new ProducerConfig
             {
-                BootstrapServers = $"{KafkaSettings.Host}:{KafkaSettings.Port}"
+                BootstrapServers = KafkaSettings.BootstrapServers,
             };
 
             var jsonSerializerOptions = new JsonSerializerOptions
@@ -32,22 +29,12 @@ namespace EventBus.Kafka.Abstraction
             _topicName = Topic;
         }
 
-        /// <summary>  
-        /// Triggered when the service creates Kafka topic.  
-        /// </summary>  
-        /// <param name="topic">Indicates topic name</param>  
-        /// <param name="key">Indicates message's key in Kafka topic</param>  
-        /// <param name="value">Indicates message's value in Kafka topic</param>  
-        /// <returns></returns>  
-        public async Task ProduceAsync(TValue value)
+
+        public async Task ProduceAsync(TKey key, TValue value)
         {
-            var key = default(TKey);
             await _producer.ProduceAsync(_topicName, new Message<TKey, TValue> { Key = key, Value = value });
         }
 
-        /// <summary>  
-        ///   
-        /// </summary>  
         public void Dispose()
         {
             _producer.Flush();

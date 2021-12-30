@@ -24,16 +24,26 @@ namespace Business
             _kafkaAccountProducer = kafkaProducer;
         }
 
-        public Task<List<Account>> GetAll()
+        public async Task<List<Account>> GetAll()
         {
-            _kafkaAccountProducer.ProduceAsync(new UpdateAccountProjectionMessage
+            await _kafkaAccountProducer.ProduceAsync(new UpdateAccountProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 AccountId = 1,
-                Name = "Тестовый",
+                Name = "Тестовый1",
+                PersonId = 1
+            });
+
+            var p = new KafkaAccountProducer();
+            await p.ProduceAsync(new UpdateAccountProjectionMessage
+            {
+                Id = Guid.NewGuid().ToString(),
+                AccountId = 2,
+                Name = "Тестовый2",
                 PersonId = 2
-            }); 
-            return _accountDao.GetAll();
+            });
+
+            return await _accountDao.GetAll();
         }
 
         public Task<Account> GetById(Guid id)

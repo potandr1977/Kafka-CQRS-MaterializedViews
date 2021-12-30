@@ -1,9 +1,8 @@
-﻿using EventBus.Kafka.Abstraction;
-using EventBus.Kafka.Abstraction.Messages;
+﻿using EventBus.Kafka.Abstraction.Messages;
 
 namespace EventBus.Kafka
 {
-    public interface IKafkaPersonProducer: IKafkaProducer<string,UpdatePersonProjectionMessage>
+    public interface IKafkaPersonProducer: IKafkaStrKeyProducer<UpdatePersonProjectionMessage>
     {
     }
 }
