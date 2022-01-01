@@ -1,7 +1,9 @@
 using EventBus.Kafka;
 using EventBus.Kafka.Abstraction;
+using EventBus.Kafka.Abstraction.Messages;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Settings;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,6 +24,7 @@ namespace Projector.Elastic
             ILogger<Worker> logger)
         {
             _logger = logger;
+            
             _kafkaAccountConsumer = kafkaAccountConsumer;
             _kafkaPaymentConsumer = kafkaPaymentConsumer;
             _kafkaPersonConsumer = kafkaPersonConsumer;
@@ -32,12 +35,6 @@ namespace Projector.Elastic
             //accounts consumers
             var accountTask = _kafkaAccountConsumer.Consume(
                 (key,value) => {
-                    var res = value;
-                },
-                stoppingToken);
-
-            var account2Task = new KafkaAccountConsumer().Consume(
-                (key, value) => {
                     var res = value;
                 },
                 stoppingToken);
@@ -56,7 +53,7 @@ namespace Projector.Elastic
                 },
                 stoppingToken);
 
-            return Task.WhenAny(accountTask, account2Task, paymentTask, personTask);
+            return Task.WhenAny(accountTask, paymentTask, personTask);
 
         }
     }

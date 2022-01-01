@@ -14,4 +14,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
+    <ProjectReference Include="..\EventBus.Kafka\EventBus.Kafka.csproj" />
+    <ProjectReference Include="..\Settings\Settings.csproj" />
+  </ItemGroup>
+
 </Project>

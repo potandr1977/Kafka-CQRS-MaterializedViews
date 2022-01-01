@@ -34,15 +34,6 @@ namespace Business
                 PersonId = 1
             });
 
-            var p = new KafkaAccountProducer();
-            await p.ProduceAsync(new UpdateAccountProjectionMessage
-            {
-                Id = Guid.NewGuid().ToString(),
-                AccountId = 2,
-                Name = "Тестовый2",
-                PersonId = 2
-            });
-
             return await _accountDao.GetAll();
         }
 
