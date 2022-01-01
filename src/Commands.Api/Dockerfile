@@ -8,6 +8,13 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 COPY ["src/Commands.Api/Commands.Api.csproj", "src/Commands.Api/"]
+COPY ["src/Domain/Domain.csproj", "src/Domain/"]
+COPY ["src/EventBus.Kafka/EventBus.Kafka.csproj", "src/EventBus.Kafka/"]
+COPY ["src/Settings/Settings.csproj", "src/Settings/"]
+COPY ["src/EventBus.Kafka.Abstraction/EventBus.Kafka.Abstraction.csproj", "src/EventBus.Kafka.Abstraction/"]
+COPY ["src/Business/Business.csproj", "src/Business/"]
+COPY ["src/DataAccess.Mongo/DataAccess.Mongo.csproj", "src/DataAccess.Mongo/"]
+COPY ["src/Commands.Application/Commands.Application.csproj", "src/Commands.Application/"]
 RUN dotnet restore "src/Commands.Api/Commands.Api.csproj"
 COPY . .
 WORKDIR "/src/src/Commands.Api"

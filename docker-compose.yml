@@ -70,16 +70,20 @@ services:
     networks:
       - mynetwork
 
-  kowl:
-    image: quay.io/cloudhut/kowl:v1.4.0
-    container_name: kowl
-    environment:
-      - KAFKA_BROKERS=kafka1:9092,kafka2:9092,kafka3:9092
+  kafdrop:
+    container_name: kafdrop
+    image: obsidiandynamics/kafdrop
+    restart: "no"
     ports:
-      - 8099:8080
+      - "9000:9000"
+    environment:
+      KAFKA_BROKERCONNECT: "kafka1:9092"
     depends_on:
-      - zookeeper
       - kafka1
+      - kafka2
+      - kafka3
+    networks:
+      - mynetwork
 
   mongodb:
     image: mongo:latest
@@ -89,6 +93,10 @@ services:
     restart: always
     environment:
       - MONGO_INITDB_DATABASE=accdb
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
     networks:
       - mynetwork
 
@@ -101,6 +109,10 @@ services:
     restart: always
     environment:
       - discovery.type=single-node
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
     networks:
       - mynetwork
 
@@ -109,6 +121,10 @@ services:
     build:
       context: .
       dockerfile: src/Commands.Api/Dockerfile
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
     networks:
       - mynetwork
 
@@ -117,6 +133,10 @@ services:
     build:
       context: .
       dockerfile: src/Queries.Api/Dockerfile
+    depends_on:
+      - kafka1
+      - kafka2
+      - kafka3
     networks:
       - mynetwork
 
@@ -125,6 +145,8 @@ services:
     build:
       context: .
       dockerfile: src/Projector.Elastic/Dockerfile
+    depends_on:
+      - kafka3
     networks:
       - mynetwork
 
