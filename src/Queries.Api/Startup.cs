@@ -57,7 +57,7 @@ namespace Queries.Api
             //accounts consumers
             var accountTask = kafkaAccountConsumer.Consume(
                 (key, value) => {
-                    var res = value;
+                    var res = key;
                 },
                 stoppingToken);
 

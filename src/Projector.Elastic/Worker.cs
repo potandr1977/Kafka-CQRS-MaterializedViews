@@ -35,7 +35,7 @@ namespace Projector.Elastic
             //accounts consumers
             var accountTask = _kafkaAccountConsumer.Consume(
                 (key,value) => {
-                    var res = value;
+                    var res = key;
                 },
                 stoppingToken);
 
