@@ -24,8 +24,14 @@ namespace EventBus.Kafka.Abstraction
             _topicName = TopicName;
 
         }
-       
-        public async Task Consume(Action<TKey,TValue> handler, CancellationToken stoppingToken)
+
+        public Task Consume(Action<TKey, TValue> handler, CancellationToken stoppingToken)
+        {
+            return Consume(handler, null, null, stoppingToken);
+        }
+
+
+        public async Task Consume(Action<TKey,TValue> handler, int? partition, int? offset, CancellationToken stoppingToken)
         {
             var jsonSerializerOptions = new JsonSerializerOptions
             {
@@ -34,7 +40,7 @@ namespace EventBus.Kafka.Abstraction
 
             _consumer = new ConsumerBuilder<TKey, TValue>(_config).SetValueDeserializer(new KafkaDeserializer<TValue>(jsonSerializerOptions)).Build();
 
-            await Task.Run(() => StartConsumerLoop(handler,stoppingToken), stoppingToken);
+            await Task.Run(() => StartConsumerLoop(handler, partition, offset, stoppingToken), stoppingToken);
         }
 
         public void Close()
@@ -47,9 +53,25 @@ namespace EventBus.Kafka.Abstraction
             _consumer.Dispose();
         }
 
-        private Task StartConsumerLoop(Action<TKey, TValue> handler, CancellationToken cancellationToken)
+        private Task StartConsumerLoop(Action<TKey, TValue> handler, int? partitionNumber, int? offset, CancellationToken cancellationToken)
         {
-            _consumer.Subscribe(_topicName);
+            var partition = partitionNumber ?? 0;
+
+            if (!partitionNumber.HasValue && !offset.HasValue)
+            {
+                _consumer.Subscribe(_topicName);
+            }
+            else
+            {
+                if (offset.HasValue)
+                {
+                    _consumer.Assign(new TopicPartitionOffset(_topicName, partition, offset.Value));
+                }
+                else
+                {
+                    _consumer.Assign(new TopicPartition(_topicName, partition));
+                }
+            }
 
             while (!cancellationToken.IsCancellationRequested)
             {

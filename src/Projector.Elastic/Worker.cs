@@ -37,7 +37,7 @@ namespace Projector.Elastic
                 (key,value) => {
                     var res = key;
                 },
-                stoppingToken);
+                0, null, stoppingToken);
 
             //payments consumers
             var paymentTask = _kafkaPaymentConsumer.Consume(

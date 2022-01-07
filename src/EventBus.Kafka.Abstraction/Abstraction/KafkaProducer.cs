@@ -30,9 +30,15 @@ namespace EventBus.Kafka.Abstraction
         }
 
 
-        public async Task ProduceAsync(TKey key, TValue value)
+        public Task ProduceAsync(TKey key, TValue value, int? partitionNum = null)
         {
-            await _producer.ProduceAsync(_topicName, new Message<TKey, TValue> { Key = key, Value = value });
+            if (partitionNum.HasValue)
+            {
+                var topicPartition = new TopicPartition(_topicName, partitionNum ?? 0);
+                return _producer.ProduceAsync(topicPartition, new Message<TKey, TValue> { Key = key, Value = value });
+            }
+
+            return _producer.ProduceAsync(_topicName, new Message<TKey, TValue> { Key = key, Value = value });
         }
 
         public void Dispose()

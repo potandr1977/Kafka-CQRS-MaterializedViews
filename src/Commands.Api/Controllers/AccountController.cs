@@ -31,6 +31,7 @@ namespace Commands.Api.Controllers
         [HttpGet("{id}")]
         public string Get(int id)
         {
+            _accountService.GetById(Guid.NewGuid());
             return "value";
         }
 

@@ -59,8 +59,7 @@ namespace Queries.Api
                 (key, value) => {
                     var res = key;
                 },
-                stoppingToken);
-
+                1, null, stoppingToken);
             //payments consumers
             var paymentTask = kafkaPaymentConsumer.Consume(
                 (key, value) => {
