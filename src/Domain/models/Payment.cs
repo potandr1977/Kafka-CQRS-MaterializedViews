@@ -1,12 +1,13 @@
 ﻿using Domain.Enums;
+using System;
 
 namespace Domain.Models
 {
     public class Payment
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
-        public int AccountId { get; set; }
+        public Guid AccountId { get; set; }
 
         public decimal Sum { get; set; }
 

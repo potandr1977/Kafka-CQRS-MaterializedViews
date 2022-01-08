@@ -1,4 +1,7 @@
-﻿using Domain.Services;
+﻿using Commands.Application.Commands;
+using Domain.Models;
+using Domain.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,33 +16,30 @@ namespace Commands.Api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly IAccountService _accountService;
-        public AccountController(IAccountService accountService)
+        private readonly IMediator _mediator;
+
+        public AccountController(IMediator mediator)
         {
-            _accountService = accountService;
+            _mediator = mediator;
         }
 
         // GET: api/<AccountController>
         [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            _accountService.GetAll();
-            return new string[] { "value1", "value2" };
-        }
+        public Task<List<Account>> Get() => _mediator.Send(new GetAllAccountsCommand());
 
         // GET api/<AccountController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            _accountService.GetById(Guid.NewGuid());
-            return "value";
-        }
+        public Task<Account> Get(int id) =>
+            _mediator.Send(
+                new GetAccountCommand() 
+                { 
+                    Id = Guid.NewGuid()
+                });
+        
 
         // POST api/<AccountController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        public void Post([FromBody] CreateAccountCommand request) => _mediator.Send(request);
 
         // PUT api/<AccountController>/5
         [HttpPut("{id}")]

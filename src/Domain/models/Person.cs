@@ -1,8 +1,10 @@
-﻿namespace Domain.Models
+﻿using System;
+
+namespace Domain.Models
 {
     public class Person
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 

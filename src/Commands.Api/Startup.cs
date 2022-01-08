@@ -1,7 +1,9 @@
 using Business.Configuration;
+using Commands.Application.Commands;
 using DataAccess.Configure;
 using EventBus.Kafka;
 using EventBus.Kafka.Abstraction;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using MongoDB.Driver;
 using Settings;
+using System.Reflection;
 
 namespace Commands.Api
 {
@@ -25,6 +28,9 @@ namespace Commands.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var handlersAssembly = typeof(CreateAccountHandler).GetTypeInfo().Assembly;
+            services.AddMediatR(Assembly.GetExecutingAssembly(), handlersAssembly);
+
             services.AddSingleton<IMongoClient>(s =>
                 new MongoClient(MongoSettings.ConnectionString)
             );

@@ -1,12 +1,14 @@
-﻿namespace Domain.Models
+﻿using System;
+
+namespace Domain.Models
 {
     public class Account
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
     }
 }
