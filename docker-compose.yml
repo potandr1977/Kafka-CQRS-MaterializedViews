@@ -114,6 +114,9 @@ services:
 
   queries.api:
     image: ${DOCKER_REGISTRY-}queriesapi
+    ports:
+      - 53169:80
+      - 44346:443
     build:
       context: .
       dockerfile: src/Queries.Api/Dockerfile

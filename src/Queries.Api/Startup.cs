@@ -77,22 +77,22 @@ namespace Queries.Api
                 (key, value) => {
                     var res = key;
                 },
-                (int) PartitionEnum.Account, null, stoppingToken);
+                (int) PartitionEnum.Zero, null, stoppingToken);
             //payments consumers
             var paymentTask = kafkaPaymentConsumer.Consume(
                 (key, value) => {
                     var res = value;
                 },
-                (int) PartitionEnum.Payment, null, stoppingToken);
+                (int) PartitionEnum.Zero, null, stoppingToken);
 
-            /*
+           
             //persons consumers
             var personTask = kafkaPersonConsumer.Consume(
                 (key, value) => {
                     var res = value;
                 },
-                (int) PartitionEnum.Person, null, stoppingToken);
-            */
+                (int) PartitionEnum.Zero, null, stoppingToken);
+            
             app.UseHttpsRedirection();
 
             app.UseRouting();

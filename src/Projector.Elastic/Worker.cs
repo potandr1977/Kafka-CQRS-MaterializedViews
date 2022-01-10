@@ -62,7 +62,7 @@ namespace Projector.Elastic
                 (key, value) => {
                     _personProjector.ProjectOne(value);
                 },
-                (int) PartitionEnum.Person, null, stoppingToken);
+                (int) PartitionEnum.Second, null, stoppingToken);
 
             return Task.WhenAny(personTask);
 

@@ -2,8 +2,8 @@
 {
     public enum PartitionEnum
     {
-        Account,
-        Payment,
-        Person
+        Zero,
+        First,
+        Second
     }
 }

@@ -36,7 +36,7 @@ namespace Business
                 Name = person.Name,
                 Inn = person.Inn
             },
-            (int) PartitionEnum.Person);
+            (int) PartitionEnum.Second);
 
             await _personDao.Save(person);
         }
