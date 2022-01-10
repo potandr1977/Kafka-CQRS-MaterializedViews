@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace Commands.Application.Commands
 {
-    public class GetAccountCommand : IRequest<Account>
+    public class GetAccountQuery : IRequest<Account>
     {
         public Guid Id { get; set; }
     }

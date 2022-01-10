@@ -6,7 +6,7 @@ namespace EventBus.Kafka.Abstraction.Messages
 {
     public class UpdatePersonProjectionMessage : UpdateProjectionMessage
     {
-        public int PersonId { get; set; }
+        public Guid PersonId { get; set; }
 
         public string Name {get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using Domain.Services;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -13,17 +14,16 @@ namespace Commands.Api.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        private readonly IPaymentService _paymentService;
+        private readonly IMediator _mediator;
 
-        public PaymentController(IPaymentService paymentService)
+        public PaymentController(IMediator mediator)
         {
-            _paymentService = paymentService;
+            _mediator = mediator;
         }
         // GET: api/<PaymentController>
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            _paymentService.GetAll();
             return new string[] { "value1", "value2" };
         }
 

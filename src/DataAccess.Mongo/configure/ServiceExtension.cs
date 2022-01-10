@@ -3,11 +3,11 @@ using DataAccess.Mongo;
 using Domain.DataAccess;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DataAccess.Configure
+namespace DataAccess.Mongo.Configure
 {
     public static class ServiceExtension
     {
-        public static IServiceCollection AddDataAccessObjects(this IServiceCollection services)
+        public static IServiceCollection AddMongoDataAccessObjects(this IServiceCollection services)
         {
             services.AddSingleton<IAccountDao, AccountDao>();
             services.AddSingleton<IPaymentDao, PaymentDao>();

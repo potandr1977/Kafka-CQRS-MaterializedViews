@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Commands.Application.Commands
 {
-    public class GetAccountHandler : IRequestHandler<GetAccountCommand, Account>
+    public class GetAccountHandler : IRequestHandler<GetAccountQuery, Account>
     {
         private readonly IAccountService _accountService;
 
         public GetAccountHandler(IAccountService accountService) =>
             _accountService = accountService;
 
-        public Task<Account> Handle(GetAccountCommand request, CancellationToken cancellationToken) =>
+        public Task<Account> Handle(GetAccountQuery request, CancellationToken cancellationToken) =>
             _accountService.GetById(request.Id);
     }
 }

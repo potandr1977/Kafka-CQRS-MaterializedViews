@@ -24,16 +24,6 @@ namespace Business
 
         public Task<List<Payment>> GetAll()
         {
-            _kafkaPaymentProducer.ProduceAsync(new UpdatePaymentProjectionMessage
-            {
-                Id = Guid.NewGuid().ToString(),
-                PaymentId = 1, 
-                PersonType  = 2,
-                AccountId = 1,
-                Sum = 10
-                
-            }); 
-
             return _paymentDao.GetAll();
         }
 

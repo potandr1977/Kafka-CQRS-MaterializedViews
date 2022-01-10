@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Commands.Application.Commands
 {
-    public class GetAllAccountsCommand : IRequest<List<Account>>
+    public class GetAllAccountsQuery : IRequest<List<Account>>
     {
 
     }

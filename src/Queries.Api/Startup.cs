@@ -1,13 +1,18 @@
+using DataAccess.Elastic.Configure;
 using EventBus.Kafka;
-using EventBus.Kafka.Abstraction;
-using EventBus.Kafka.Abstraction.Messages;
+using EventBus.Kafka.Abstraction.Enums;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Nest;
+using Queries.Application.Persons;
 using Settings;
+using System;
+using System.Reflection;
 using System.Threading;
 
 namespace Queries.Api
@@ -24,9 +29,22 @@ namespace Queries.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            var handlersAssembly = typeof(GetAllPersonHandler).GetTypeInfo().Assembly;
+            services.AddMediatR(Assembly.GetExecutingAssembly(), handlersAssembly);
+
+            services.AddSingleton<IElasticClient>(s =>
+            {
+                var settings =
+                    new ConnectionSettings(new Uri(ElasticSettings.Url)).DefaultIndex(ElasticSettings.DefaultIndexName);
+
+                return new ElasticClient(settings);
+            });
+
             services.AddSingleton<IKafkaAccountConsumer, KafkaAccountConsumer>();
             services.AddSingleton<IKafkaPaymentConsumer, KafkaPaymentConsumer>();
             services.AddSingleton<IKafkaPersonConsumer, KafkaPersonConsumer>();
+
+            services.AddElasticDataAccessObjects();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -59,21 +77,22 @@ namespace Queries.Api
                 (key, value) => {
                     var res = key;
                 },
-                1, null, stoppingToken);
+                (int) PartitionEnum.Account, null, stoppingToken);
             //payments consumers
             var paymentTask = kafkaPaymentConsumer.Consume(
                 (key, value) => {
                     var res = value;
                 },
-                stoppingToken);
+                (int) PartitionEnum.Payment, null, stoppingToken);
 
+            /*
             //persons consumers
             var personTask = kafkaPersonConsumer.Consume(
                 (key, value) => {
                     var res = value;
                 },
-                stoppingToken);
-
+                (int) PartitionEnum.Person, null, stoppingToken);
+            */
             app.UseHttpsRedirection();
 
             app.UseRouting();

@@ -1,10 +1,12 @@
-﻿namespace EventBus.Kafka.Abstraction.Messages
+﻿using System;
+
+namespace EventBus.Kafka.Abstraction.Messages
 {
     public class UpdatePaymentProjectionMessage : UpdateProjectionMessage
     {
-        public int PaymentId { get; set; }
+        public Guid PaymentId { get; set; }
 
-        public int AccountId { get; set; }
+        public Guid AccountId { get; set; }
 
         public decimal Sum { get; set; }
 

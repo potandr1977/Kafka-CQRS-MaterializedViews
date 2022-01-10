@@ -1,8 +1,7 @@
 using Business.Configuration;
 using Commands.Application.Commands;
-using DataAccess.Configure;
+using DataAccess.Mongo.Configure;
 using EventBus.Kafka;
-using EventBus.Kafka.Abstraction;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -28,7 +27,7 @@ namespace Commands.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var handlersAssembly = typeof(CreateAccountHandler).GetTypeInfo().Assembly;
+            var handlersAssembly = typeof(CreatePersonHandler).GetTypeInfo().Assembly;
             services.AddMediatR(Assembly.GetExecutingAssembly(), handlersAssembly);
 
             services.AddSingleton<IMongoClient>(s =>
@@ -38,7 +37,7 @@ namespace Commands.Api
             services.AddSingleton<IKafkaPaymentProducer, KafkaPaymentProducer>();
             services.AddSingleton<IKafkaPersonProducer, KafkaPersonProducer>();
 
-            services.AddDataAccessObjects();
+            services.AddMongoDataAccessObjects();
             services.AddDomainServices();
 
             services.AddControllers();

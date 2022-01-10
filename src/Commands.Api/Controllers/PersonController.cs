@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Commands.Application.Commands;
+using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,25 +14,18 @@ namespace Commands.Api.Controllers
     [ApiController]
     public class PersonController : ControllerBase
     {
-        // GET: api/<PersonController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        private readonly IMediator _mediator;
 
-        // GET api/<PersonController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        public PersonController(IMediator mediator)
         {
-            return "value";
+            _mediator = mediator;
         }
 
         // POST api/<PersonController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        public void Post([FromBody] CreatePersonCommand request) => 
+            _mediator.Send(request);
+        
 
         // PUT api/<PersonController>/5
         [HttpPut("{id}")]

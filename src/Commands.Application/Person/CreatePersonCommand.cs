@@ -1,12 +1,11 @@
 ﻿using MediatR;
-using System;
 
 namespace Commands.Application.Commands
 {
-    public class CreateAccountCommand : IRequest
+    public class CreatePersonCommand : IRequest
     {
         public string Name { get; set; }
 
-        public Guid PersonId { get; set; }
+        public string Inn { get; set; }
     }
 }

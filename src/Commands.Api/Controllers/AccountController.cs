@@ -25,13 +25,13 @@ namespace Commands.Api.Controllers
 
         // GET: api/<AccountController>
         [HttpGet]
-        public Task<List<Account>> Get() => _mediator.Send(new GetAllAccountsCommand());
+        public Task<List<Account>> Get() => _mediator.Send(new GetAllAccountsQuery());
 
         // GET api/<AccountController>/5
         [HttpGet("{id}")]
         public Task<Account> Get(int id) =>
             _mediator.Send(
-                new GetAccountCommand() 
+                new GetAccountQuery() 
                 { 
                     Id = Guid.NewGuid()
                 });

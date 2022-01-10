@@ -1,4 +1,5 @@
 using EventBus.Kafka;
+using EventBus.Kafka.Abstraction.Enums;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Projector.Elastic.projections.Account;
@@ -41,6 +42,7 @@ namespace Projector.Elastic
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            /*
             //accounts consumers
             var accountTask = _kafkaAccountConsumer.Consume(
                 (key,value) => {
@@ -54,15 +56,17 @@ namespace Projector.Elastic
                     _paymentProjector.ProjectOne(value);
                 },
                 stoppingToken);
-
+            */
             //persons consumers
             var personTask = _kafkaPersonConsumer.Consume(
                 (key, value) => {
                     _personProjector.ProjectOne(value);
                 },
-                stoppingToken);
+                (int) PartitionEnum.Person, null, stoppingToken);
 
-            return Task.WhenAny(accountTask, paymentTask, personTask);
+            return Task.WhenAny(personTask);
+
+            //return Task.WhenAny(accountTask, paymentTask, personTask);
 
         }
     }
