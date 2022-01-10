@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.Mongo", "src\Dat
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAccess.Elastic", "src\DataAccess.Elastic\DataAccess.Elastic.csproj", "{F3C31BD9-5A43-4A22-B6A8-D10F894806F7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Projector.Elastic", "src\Projector.Elastic\Projector.Elastic.csproj", "{69C60FCF-9FCB-4777-93A3-052251A867E0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimpleViewProjector.Elastic", "src\Projector.Elastic\SimpleViewProjector.Elastic.csproj", "{69C60FCF-9FCB-4777-93A3-052251A867E0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Queries.Core", "src\Queries.Core\Queries.Core.csproj", "{16F914ED-8832-4D2B-BFB4-9733BD71BA88}"
 EndProject
