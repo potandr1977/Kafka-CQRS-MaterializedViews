@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Queries.Application.Persons;
 using Queries.Core.models;
 using System;
@@ -16,17 +17,22 @@ namespace Queries.Api.Controllers
     public class PersonController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IConfiguration _configuration;
 
-        public PersonController(IMediator mediator)
+        public PersonController(
+            IMediator mediator,
+            IConfiguration configuration
+            )
         {
             _mediator = mediator;
+            _configuration = configuration;
         }
 
         // GET: api/<PersonController>
         [HttpGet]
-        public Task<IReadOnlyCollection<Person>> Get() => 
+        public Task<IReadOnlyCollection<Person>> Get() =>
             _mediator.Send(new GetAllPersonQuery());
-        
+
 
         // GET api/<PersonController>/5
         [HttpGet("{id}")]
@@ -34,5 +40,10 @@ namespace Queries.Api.Controllers
         {
             return "value";
         }
+
+        [HttpGet]
+        [Route("GetLastUpdate")]
+        public string GetLastUpdate() => _configuration["LastUpdate"];
+            
     }
 }

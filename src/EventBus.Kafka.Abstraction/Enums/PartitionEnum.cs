@@ -2,8 +2,9 @@
 {
     public enum PartitionEnum
     {
-        Zero,
-        First,
-        Second
+        Projector,
+        QueriesApiFirst,
+        QueriesApiSecond,
+        QueriesApiThird,
     }
 }

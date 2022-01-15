@@ -129,6 +129,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://0.0.0.0:80
+      - PartitionNumber=2
     depends_on:
       - kafka1
     networks:

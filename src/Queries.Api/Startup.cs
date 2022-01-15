@@ -71,28 +71,41 @@ namespace Queries.Api
 
             CancellationTokenSource cts = new CancellationTokenSource();
             CancellationToken stoppingToken = cts.Token;
-            
-            //accounts consumers
-            var accountTask = kafkaAccountConsumer.Consume(
-                (key, value) => {
-                    var res = key;
-                },
-                (int) PartitionEnum.Zero, null, stoppingToken);
-            //payments consumers
-            var paymentTask = kafkaPaymentConsumer.Consume(
-                (key, value) => {
-                    var res = value;
-                },
-                (int) PartitionEnum.Zero, null, stoppingToken);
 
-           
-            //persons consumers
-            var personTask = kafkaPersonConsumer.Consume(
-                (key, value) => {
-                    var res = value;
-                },
-                (int) PartitionEnum.Zero, null, stoppingToken);
-            
+            var partitionNumber = Configuration["PartitionNumber"];
+
+            void IncLastUpdate()
+            {
+                var lastUpdateStr = Configuration["LastUpdate"];
+                int.TryParse(lastUpdateStr, out var lastUpdate);
+                Configuration["LastUpdate"] = (++lastUpdate).ToString();
+            }
+
+            if (int.TryParse(partitionNumber, out var partition))
+            {
+                //accounts consumers
+                var accountTask = kafkaAccountConsumer.Consume(
+                    (key, value) => {
+                        var res = key;
+                    },
+                    partition, null, stoppingToken);
+                //payments consumers
+                var paymentTask = kafkaPaymentConsumer.Consume(
+                    (key, value) => {
+                        var res = value;
+                    },
+                    partition, null, stoppingToken);
+
+
+                //persons consumers
+                var personTask = kafkaPersonConsumer.Consume(
+                    (key, value) => {
+                        var res = value;
+                        IncLastUpdate();
+                    },
+                    partition, null, stoppingToken);
+            }
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

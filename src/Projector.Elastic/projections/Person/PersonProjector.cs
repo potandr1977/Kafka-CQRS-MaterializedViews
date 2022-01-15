@@ -10,7 +10,6 @@ namespace Projector.Elastic.projections.Person
 {
     public class PersonProjector : IPersonProjector
     {
-        private readonly IPersonDao _personDao;
         private readonly IPersonSimpleViewDao _personSimpleViewDao;
         private readonly IKafkaPersonProducer _kafkaPersonProducer;
 
@@ -33,7 +32,8 @@ namespace Projector.Elastic.projections.Person
 
             await _personSimpleViewDao.Save(person);
 
-            await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.Zero);
+            await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiFirst);
+            await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiSecond);
         }
     }
 }

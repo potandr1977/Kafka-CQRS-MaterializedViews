@@ -48,25 +48,24 @@ namespace Projector.Elastic
                 (key,value) => {
                     _accountProjector.ProjectOne(value);
                 },
-                0, null, stoppingToken);
+                (int) PartitionEnum.Projector, null, stoppingToken);
 
             //payments consumers
             var paymentTask = _kafkaPaymentConsumer.Consume(
                 (key, value) => {
                     _paymentProjector.ProjectOne(value);
                 },
-                stoppingToken);
+                (int) PartitionEnum.Projector, null, stoppingToken);
             */
             //persons consumers
             var personTask = _kafkaPersonConsumer.Consume(
                 (key, value) => {
                     _personProjector.ProjectOne(value);
                 },
-                (int) PartitionEnum.Second, null, stoppingToken);
-
-            return Task.WhenAny(personTask);
+                (int) PartitionEnum.Projector, null, stoppingToken);
 
             //return Task.WhenAny(accountTask, paymentTask, personTask);
+            return Task.WhenAny(personTask);
 
         }
     }
