@@ -1,4 +1,6 @@
 ﻿using DataAccess.DataAccess;
+using EventBus.Kafka;
+using EventBus.Kafka.Abstraction.Enums;
 using EventBus.Kafka.Abstraction.Messages;
 using Queries.Core.dataaccess;
 using System;
@@ -10,10 +12,14 @@ namespace Projector.Elastic.projections.Person
     {
         private readonly IPersonDao _personDao;
         private readonly IPersonSimpleViewDao _personSimpleViewDao;
+        private readonly IKafkaPersonProducer _kafkaPersonProducer;
 
-        public PersonProjector(IPersonSimpleViewDao personSimpleViewDao)
+        public PersonProjector(
+            IPersonSimpleViewDao personSimpleViewDao,
+            IKafkaPersonProducer kafkaPersonProducer)
         {
             _personSimpleViewDao = personSimpleViewDao;
+            _kafkaPersonProducer = kafkaPersonProducer;
         }
 
         public async Task ProjectOne(UpdatePersonProjectionMessage message)
@@ -26,6 +32,8 @@ namespace Projector.Elastic.projections.Person
             };
 
             await _personSimpleViewDao.Save(person);
+
+            await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.Zero);
         }
     }
 }

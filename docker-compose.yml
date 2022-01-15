@@ -106,20 +106,31 @@ services:
 
   commands.api:
     image: ${DOCKER_REGISTRY-}commandsapi
+    ports:
+      - 54322:80
     build:
       context: .
       dockerfile: src/Commands.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    depends_on:
+      - kafka1
     networks:
       - mynetwork
 
   queries.api:
     image: ${DOCKER_REGISTRY-}queriesapi
     ports:
-      - 53169:80
-      - 44346:443
+      - 54321:80
     build:
       context: .
       dockerfile: src/Queries.Api/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:80
+    depends_on:
+      - kafka1
     networks:
       - mynetwork
 

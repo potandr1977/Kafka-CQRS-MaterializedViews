@@ -44,6 +44,10 @@ namespace Projector.Elastic
                     services.AddSingleton<IKafkaPaymentConsumer, KafkaPaymentConsumer>();
                     services.AddSingleton<IKafkaPersonConsumer, KafkaPersonConsumer>();
 
+                    services.AddSingleton<IKafkaAccountProducer, KafkaAccountProducer>();
+                    services.AddSingleton<IKafkaPaymentProducer, KafkaPaymentProducer>();
+                    services.AddSingleton<IKafkaPersonProducer, KafkaPersonProducer>();
+
                     services.AddSingleton<IAccountProjector, AccountProjector>();
                     services.AddSingleton<IPaymentProjector, PaymentProjector>();
                     services.AddSingleton<IPersonProjector, PersonProjector>();
