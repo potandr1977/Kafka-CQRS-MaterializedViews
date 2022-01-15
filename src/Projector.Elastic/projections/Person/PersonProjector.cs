@@ -33,7 +33,7 @@ namespace Projector.Elastic.projections.Person
             await _personSimpleViewDao.Save(person);
 
             await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiFirst);
-            await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiSecond);
+            //await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiSecond);
         }
     }
 }
