@@ -32,15 +32,14 @@ namespace Projector.Elastic.projections.Person
             try
             {
                 await _personSimpleViewDao.Save(person);
-                var res = await _personSimpleViewDao.GetAll();
             }
             catch (Exception e)
             {
-                var m = e.Message;
+                Console.WriteLine(e.Message);
             }
 
             await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiFirst);
-            //await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiSecond);
+            await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiSecond);
         }
     }
 }

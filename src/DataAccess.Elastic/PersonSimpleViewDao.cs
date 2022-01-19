@@ -28,9 +28,7 @@ namespace DataAccess.Elastic
             return resp.Documents;
         }
 
-        public async Task Save(Person person)
-        {
-            var res = await elasticClient.IndexDocumentAsync(person);
-        }
+        public Task Save(Person person) =>
+            elasticClient.IndexDocumentAsync(person);
     }
 }

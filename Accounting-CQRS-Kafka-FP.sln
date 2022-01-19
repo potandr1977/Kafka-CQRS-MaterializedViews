@@ -45,7 +45,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "messages", "messages", "{5A5F28CB-4CE0-4CC1-A2C8-C443ED58433D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Messages", "src\Messages\Messages.csproj", "{3052F019-E27B-46FB-A191-2D1F63075847}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Messages", "src\Messages\Messages.csproj", "{3052F019-E27B-46FB-A191-2D1F63075847}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
