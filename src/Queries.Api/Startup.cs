@@ -10,6 +10,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Nest;
 using Queries.Application.Persons;
+using Queries.Core.models;
 using Settings;
 using System;
 using System.Reflection;
@@ -35,7 +36,11 @@ namespace Queries.Api
             services.AddSingleton<IElasticClient>(s =>
             {
                 var settings =
-                    new ConnectionSettings(new Uri(ElasticSettings.Url)).DefaultIndex(ElasticSettings.DefaultIndexName);
+                    new ConnectionSettings(new Uri(ElasticSettings.Url))
+                    .DefaultIndex(ElasticSettings.PersonsIndexName)
+                    .DefaultMappingFor<Account>(m => m.IndexName(ElasticSettings.AccountsIndexName))
+                    .DefaultMappingFor<Payment>(m => m.IndexName(ElasticSettings.PaymentsIndexName))
+                    .DefaultMappingFor<Person>(m => m.IndexName(ElasticSettings.PersonsIndexName));
 
                 return new ElasticClient(settings);
             });

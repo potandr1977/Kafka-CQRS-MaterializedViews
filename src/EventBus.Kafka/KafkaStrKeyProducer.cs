@@ -1,4 +1,4 @@
-﻿using EventBus.Kafka.Abstraction.Messages;
+﻿using Messages;
 using System.Threading.Tasks;
 
 namespace EventBus.Kafka.Abstraction

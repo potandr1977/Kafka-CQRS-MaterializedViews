@@ -1,6 +1,7 @@
 ﻿using Nest;
 using Queries.Core.dataaccess;
 using Queries.Core.models;
+using Settings;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ namespace DataAccess.Elastic
         public async Task<IReadOnlyCollection<Person>> GetAll()
         {
             var resp = await elasticClient.SearchAsync<Person>(s => s
+                .Index(ElasticSettings.PersonsIndexName)
                 .From(0)
                 .Size(10)
                 .Query(q => q
@@ -26,7 +28,9 @@ namespace DataAccess.Elastic
             return resp.Documents;
         }
 
-        public Task Save(Person person) => 
-            elasticClient.IndexDocumentAsync(person);
+        public async Task Save(Person person)
+        {
+            var res = await elasticClient.IndexDocumentAsync(person);
+        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using DataAccess.DataAccess;
 using EventBus.Kafka;
 using EventBus.Kafka.Abstraction.Enums;
-using EventBus.Kafka.Abstraction.Messages;
+using Messages;
 using Queries.Core.dataaccess;
 using System;
 using System.Threading.Tasks;
@@ -29,8 +29,15 @@ namespace Projector.Elastic.projections.Person
                 Name = message.Name,
                 Inn = message.Inn,
             };
-
-            await _personSimpleViewDao.Save(person);
+            try
+            {
+                await _personSimpleViewDao.Save(person);
+                var res = await _personSimpleViewDao.GetAll();
+            }
+            catch (Exception e)
+            {
+                var m = e.Message;
+            }
 
             await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiFirst);
             //await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiSecond);

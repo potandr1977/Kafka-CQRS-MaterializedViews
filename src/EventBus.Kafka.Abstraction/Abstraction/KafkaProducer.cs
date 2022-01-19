@@ -1,5 +1,5 @@
 ﻿using Confluent.Kafka;
-using EventBus.Kafka.Abstraction.Messages;
+using Messages;
 using Settings;
 using System;
 using System.Text.Json;

@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace EventBus.Kafka.Abstraction.Messages
+namespace Messages
 {
-    public class UpdatePaymentProjectionMessage : UpdateProjectionMessage
+    public record UpdatePaymentProjectionMessage : UpdateProjectionMessage
     {
         public Guid PaymentId { get; set; }
 

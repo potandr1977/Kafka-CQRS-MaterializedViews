@@ -1,7 +1,6 @@
 using DataAccess.Elastic.Configure;
 using DataAccess.Mongo.Configure;
 using EventBus.Kafka;
-using EventBus.Kafka.Abstraction;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
@@ -9,11 +8,9 @@ using Nest;
 using Projector.Elastic.projections.Account;
 using Projector.Elastic.projections.Payment;
 using Projector.Elastic.projections.Person;
+using Queries.Core.models;
 using Settings;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Projector.Elastic
 {
@@ -35,7 +32,11 @@ namespace Projector.Elastic
                     services.AddSingleton<IElasticClient>(s =>
                     {
                         var settings =
-                            new ConnectionSettings(new Uri(ElasticSettings.Url)).DefaultIndex(ElasticSettings.DefaultIndexName);
+                            new ConnectionSettings(new Uri(ElasticSettings.Url))
+                            .DefaultIndex(ElasticSettings.PersonsIndexName)
+                            .DefaultMappingFor<Account>(m => m.IndexName(ElasticSettings.AccountsIndexName))
+                            .DefaultMappingFor<Payment>(m => m.IndexName(ElasticSettings.PaymentsIndexName))
+                            .DefaultMappingFor<Person>(m => m.IndexName(ElasticSettings.PersonsIndexName));
 
                         return new ElasticClient(settings);
                     });

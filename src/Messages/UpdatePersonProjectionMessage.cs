@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace EventBus.Kafka.Abstraction.Messages
+namespace Messages
 {
-    public class UpdatePersonProjectionMessage : UpdateProjectionMessage
+    public record UpdatePersonProjectionMessage : UpdateProjectionMessage
     {
         public Guid PersonId { get; set; }
 

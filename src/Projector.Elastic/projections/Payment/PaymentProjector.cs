@@ -1,5 +1,5 @@
 ﻿using DataAccess.DataAccess;
-using EventBus.Kafka.Abstraction.Messages;
+using Messages;
 using Queries.Core.dataaccess;
 using System;
 using System.Threading.Tasks;

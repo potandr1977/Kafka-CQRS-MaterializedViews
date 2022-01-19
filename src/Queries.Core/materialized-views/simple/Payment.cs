@@ -3,16 +3,16 @@ using System;
 
 namespace Queries.Core.models
 {
-    public class Payment
+    public record Payment
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
 
-        public Guid AccountId { get; set; }
+        public Guid AccountId { get; init; }
 
-        public string AccountName { get; set; }
+        public string AccountName { get; init; }
 
-        public decimal Sum { get; set; }
+        public decimal Sum { get; init; }
 
-        public PaymentTypeEnum PaymentType { get; set; }
+        public PaymentTypeEnum PaymentType { get; init; }
     }
 }
