@@ -4,12 +4,12 @@ namespace Messages
 {
     public record UpdatePaymentProjectionMessage : UpdateProjectionMessage
     {
-        public Guid PaymentId { get; set; }
+        public Guid PaymentId { get; init; }
 
-        public Guid AccountId { get; set; }
+        public Guid AccountId { get; init; }
 
-        public decimal Sum { get; set; }
+        public decimal Sum { get; init; }
 
-        public int PersonType { get; set; }
+        public int PersonType { get; init; }
     }
 }

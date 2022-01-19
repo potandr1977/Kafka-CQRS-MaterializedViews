@@ -4,10 +4,10 @@ namespace Messages
 {
     public record UpdateAccountProjectionMessage : UpdateProjectionMessage
     {
-        public Guid AccountId { get; set; }
+        public Guid AccountId { get; init; }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public Guid PersonId { get; set; }
+        public Guid PersonId { get; init; }
     }
 }
