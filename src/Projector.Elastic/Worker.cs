@@ -42,7 +42,7 @@ namespace Projector.Elastic
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            /*
+            
             //accounts consumers
             var accountTask = _kafkaAccountConsumer.Consume(
                 (key,value) => {
@@ -56,7 +56,7 @@ namespace Projector.Elastic
                     _paymentProjector.ProjectOne(value);
                 },
                 (int) PartitionEnum.Projector, null, stoppingToken);
-            */
+            
             //persons consumers
             var personTask = _kafkaPersonConsumer.Consume(
                 (key, value) => {
