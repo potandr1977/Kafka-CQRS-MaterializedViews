@@ -78,11 +78,11 @@ namespace Queries.Api
             CancellationToken stoppingToken = cts.Token;
 
             var partitionNumber = Configuration["PartitionNumber"];
-
-            void IncLastUpdate()
+            
+            void IncUpdateCounter()
             {
                 var lastUpdateStr = Configuration["LastUpdate"];
-                int.TryParse(lastUpdateStr, out var lastUpdate);
+                _ = int.TryParse(lastUpdateStr, out var lastUpdate);
                 Configuration["LastUpdate"] = (++lastUpdate).ToString();
             }
 
@@ -91,13 +91,15 @@ namespace Queries.Api
                 //accounts consumers
                 var accountTask = kafkaAccountConsumer.Consume(
                     (key, value) => {
-                        var res = key;
+                        Console.WriteLine("Account projection changed AccountId:{value.Id}");
+                        IncUpdateCounter();
                     },
                     partition, null, stoppingToken);
                 //payments consumers
                 var paymentTask = kafkaPaymentConsumer.Consume(
                     (key, value) => {
-                        var res = value;
+                        Console.WriteLine("Payment projection changed PaymentId:{value.Id}");
+                        IncUpdateCounter();
                     },
                     partition, null, stoppingToken);
 
@@ -105,8 +107,8 @@ namespace Queries.Api
                 //persons consumers
                 var personTask = kafkaPersonConsumer.Consume(
                     (key, value) => {
-                        var res = value;
-                        IncLastUpdate();
+                        Console.WriteLine("Person projection changed PersonId:{value.Id}");
+                        IncUpdateCounter();
                     },
                     partition, null, stoppingToken);
             }
