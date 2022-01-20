@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace Queries.Core.models
 {
-    public class Person
+    public record Person
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public string Inn { get; set; }
+        public string Inn { get; init; }
     }
 }

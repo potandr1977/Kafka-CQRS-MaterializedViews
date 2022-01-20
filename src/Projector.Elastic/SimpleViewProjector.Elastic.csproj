@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+	<LangVersion>9</LangVersion>
     <UserSecretsId>dotnet-Projector.Elastic-15508B90-54CA-418E-B290-E5C9FDC4149F</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>

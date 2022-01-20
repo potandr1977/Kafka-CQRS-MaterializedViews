@@ -10,5 +10,6 @@ namespace Settings
         public static string PersonTopicName = "person-topic";
         public static string BusinessGroupId = "business-group";
         public static string MailingGroupId = "mailing-group";
+        public static int PartitionCount = 3;
     }
 }

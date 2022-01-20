@@ -2,14 +2,14 @@
 
 namespace Queries.Core.models
 {
-    public class Account
+    public record Account
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; init; }
 
-        public string Name { get; set; }
+        public string Name { get; init; }
 
-        public Guid PersonId { get; set; }
+        public Guid PersonId { get; init; }
 
-        public string PersonName { get; set; }
+        public string PersonName { get; init; }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using EventBus.Kafka.Abstraction;
-using EventBus.Kafka.Abstraction.Messages;
+using Messages;
 using Settings;
 
 namespace EventBus.Kafka

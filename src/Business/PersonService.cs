@@ -3,7 +3,7 @@ using Domain.Models;
 using Domain.Services;
 using EventBus.Kafka;
 using EventBus.Kafka.Abstraction.Enums;
-using EventBus.Kafka.Abstraction.Messages;
+using Messages;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,6 +29,8 @@ namespace Business
 
         public async Task Save(Person person)
         {
+            await _personDao.Save(person);
+
             await _kafkaPersonProducer.ProduceAsync(new UpdatePersonProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
@@ -37,8 +39,6 @@ namespace Business
                 Inn = person.Inn
             },
             (int) PartitionEnum.Projector);
-
-            await _personDao.Save(person);
         }
     }
 }

@@ -2,7 +2,8 @@
 using Domain.Models;
 using Domain.Services;
 using EventBus.Kafka;
-using EventBus.Kafka.Abstraction.Messages;
+using EventBus.Kafka.Abstraction.Enums;
+using Messages;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -32,9 +33,19 @@ namespace Business
             return _paymentDao.GetById(id);
         }
 
-        public Task Save(Payment payment)
+        public async Task Save(Payment payment)
         {
-            return _paymentDao.Save(payment);
+            await _paymentDao.Save(payment);
+
+            await _kafkaPaymentProducer.ProduceAsync(new UpdatePaymentProjectionMessage
+            {
+                Id = Guid.NewGuid().ToString(),
+                PaymentId = payment.Id,
+                AccountId = payment.AccountId,
+                PersonType = (int) payment.PaymentType,
+                Sum = payment.Sum
+            },
+            (int) PartitionEnum.Projector);
         }
     }
 }
