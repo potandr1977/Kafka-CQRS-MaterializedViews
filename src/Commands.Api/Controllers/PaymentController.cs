@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using Commands.Application.Commands;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -12,40 +13,18 @@ namespace Commands.Api.Controllers
     {
         private readonly IMediator _mediator;
 
-        public PaymentController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-        // GET: api/<PaymentController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
+        public PaymentController(IMediator mediator) => _mediator = mediator;
 
-        // GET api/<PaymentController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<PaymentController>
+        // POST api/<AccountController>
         [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
+        public void Post([FromBody] CreatePaymentCommand request) => _mediator.Send(request);
 
-        // PUT api/<PaymentController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        // PUT api/<AccountController>/5
+        [HttpPut]
+        public void Put([FromBody] UpdatePaymentCommand request) => _mediator.Send(request);
 
-        // DELETE api/<PaymentController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        // DELETE api/<AccountController>/5
+        [HttpDelete]
+        public void Delete([FromBody] DeletePaymentCommand request) => _mediator.Send(request);
     }
 }

@@ -16,10 +16,7 @@ namespace Commands.Api.Controllers
     {
         private readonly IMediator _mediator;
 
-        public PersonController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
+        public PersonController(IMediator mediator) => _mediator = mediator;
 
         // POST api/<PersonController>
         [HttpPost]
@@ -34,8 +31,7 @@ namespace Commands.Api.Controllers
 
         // DELETE api/<PersonController>/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        public void Delete([FromBody] DeletePersonCommand request) =>
+            _mediator.Send(request);
     }
 }
