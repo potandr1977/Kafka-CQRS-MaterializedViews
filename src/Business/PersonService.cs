@@ -7,6 +7,8 @@ using Messages;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
+using Domain.DataAccess;
 
 namespace Business
 {
@@ -14,13 +16,27 @@ namespace Business
     {
         private readonly IPersonDao _personDao;
         private readonly IKafkaPersonProducer _kafkaPersonProducer;
+        private readonly IAccountDao _accountDao;
 
         public PersonService(
             IPersonDao personDao,
+            IAccountDao accountDao,
             IKafkaPersonProducer kafkaPersonProducer)
         {
             _personDao = personDao;
+            _accountDao = accountDao;
             _kafkaPersonProducer = kafkaPersonProducer;
+        }
+
+        public async Task DeleteById(Guid id)
+        {
+            var accounts = await _accountDao.GetByPersonId(id);
+            if (accounts.Any())
+            {
+                return;
+            }
+
+            await _personDao.DeleteById(id);
         }
 
         public Task<List<Person>> GetAll() => _personDao.GetAll();

@@ -1,6 +1,5 @@
 ﻿using Domain.DataAccess;
 using Domain.Models;
-using MongoDB.Bson;
 using MongoDB.Driver;
 using Settings;
 using System;
@@ -13,17 +12,11 @@ namespace DataAccess.Mongo
     {
         private readonly IMongoDatabase database;
 
-        public AccountDao(IMongoClient mongoClient)
-        {
-            database = mongoClient.GetDatabase(MongoSettings.DbName);
-        }
+        public AccountDao(IMongoClient mongoClient) => database = mongoClient.GetDatabase(MongoSettings.DbName);
 
         private IMongoCollection<Account> Accounts => database.GetCollection<Account>(MongoSettings.AccountsCollectionName);
 
-        public Task Save(Account author)
-        {
-            return Accounts.InsertOneAsync(author);
-        }
+        public Task Save(Account author) => Accounts.InsertOneAsync(author);
 
         public Task<List<Account>> GetAll()
         {
@@ -33,9 +26,13 @@ namespace DataAccess.Mongo
             return Accounts.Find(filter).ToListAsync();
         }
 
-        public Task<Account> GetById(Guid id)
-        {
-            return Accounts.Find(new BsonDocument("Id", id.ToByteArray())).FirstOrDefaultAsync();
-        }
+        public Task<Account> GetById(Guid id) =>
+            Accounts.Find(account => account.Id == id).FirstOrDefaultAsync();
+
+        public Task DeleteById(Guid id) =>
+            Accounts.DeleteOneAsync(account => account.Id == id);
+
+        public Task<List<Account>> GetByPersonId(Guid personId) => 
+            Accounts.Find(account => account.PersonId == personId).ToListAsync();
     }
 }

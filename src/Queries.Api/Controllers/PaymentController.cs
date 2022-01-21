@@ -1,21 +1,17 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace Commands.Api.Controllers
+namespace Queries.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public PaymentController(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
         // GET: api/<PaymentController>
         [HttpGet]
         public IEnumerable<string> Get()

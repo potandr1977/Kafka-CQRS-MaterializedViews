@@ -7,17 +7,17 @@ using System.Threading.Tasks;
 
 namespace Commands.Application.Commands
 {
-    public class CreateAccountHandler : IRequestHandler<CreateAccountCommand>
+    public class UpdateAccountHandler : IRequestHandler<UpdateAccountCommand>
     {
         private readonly IAccountService _accountService;
 
-        public CreateAccountHandler(IAccountService accountService) => _accountService = accountService;
+        public UpdateAccountHandler(IAccountService accountService) => _accountService = accountService;
 
-        public async Task<Unit> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
         {
             var account = new Account
             {
-                Id = Guid.NewGuid(),
+                Id = request.Id,
                 Name = request.Name,
                 PersonId = request.PersonId
             };

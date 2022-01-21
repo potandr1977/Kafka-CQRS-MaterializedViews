@@ -23,6 +23,8 @@ namespace Business
             _kafkaPaymentProducer = kafkaPaymentProducer;
         }
 
+        public Task DeleteById(Guid id) => _paymentDao.DeleteById(id);
+
         public Task<List<Payment>> GetAll()
         {
             return _paymentDao.GetAll();

@@ -25,13 +25,12 @@ namespace Commands.Api.Controllers
         [HttpPost]
         public void Post([FromBody] CreatePersonCommand request) => 
             _mediator.Send(request);
-        
+
 
         // PUT api/<PersonController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
+        public void Put([FromBody] UpdatePersonCommand request) =>
+            _mediator.Send(request);
 
         // DELETE api/<PersonController>/5
         [HttpDelete("{id}")]

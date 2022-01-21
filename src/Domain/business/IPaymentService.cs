@@ -13,5 +13,7 @@ namespace Domain.Services
         public Task<List<Payment>> GetAll();
 
         public Task<Payment> GetById(Guid id);
+
+        public Task DeleteById(Guid id);
     }
 }

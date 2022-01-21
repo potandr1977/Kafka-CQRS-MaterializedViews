@@ -1,7 +1,6 @@
 ﻿using Domain.Models;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.DataAccess
@@ -13,5 +12,9 @@ namespace DataAccess.DataAccess
         public Task<List<Payment>> GetAll();
 
         public Task<Payment> GetById(Guid id);
+
+        public Task<List<Payment>> GetByAccountId(Guid accountId);
+
+        public Task DeleteById(Guid id);
     }
 }

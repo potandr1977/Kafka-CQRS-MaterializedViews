@@ -1,6 +1,5 @@
 using DataAccess.Elastic.Configure;
 using EventBus.Kafka;
-using EventBus.Kafka.Abstraction.Enums;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
