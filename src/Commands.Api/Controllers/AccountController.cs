@@ -1,6 +1,8 @@
 ﻿using Commands.Application.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -16,7 +18,7 @@ namespace Commands.Api.Controllers
 
         // POST api/<AccountController>
         [HttpPost]
-        public void Post([FromBody] CreateAccountCommand request) => _mediator.Send(request);
+        public Task<Guid> Post([FromBody] CreateAccountCommand request) => _mediator.Send(request);
 
         // PUT api/<AccountController>/5
         [HttpPut]

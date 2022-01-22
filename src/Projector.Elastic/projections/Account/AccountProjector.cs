@@ -25,11 +25,12 @@ namespace Projector.Elastic.projections.Account
         }
         public async Task ProjectOne(UpdateAccountProjectionMessage message)
         {
-            var personMongo = await _personDao.GetById(message.AccountId);
+            var personMongo = await _personDao.GetById(message.PersonId);
 
             var account = new Queries.Core.models.Account
             {
                 Id = message.AccountId,
+                Name = message.Name,
                 PersonId = message.PersonId,
                 PersonName = personMongo?.Name
             };

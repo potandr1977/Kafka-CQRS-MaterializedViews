@@ -2,8 +2,6 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,18 +18,18 @@ namespace Commands.Api.Controllers
 
         // POST api/<PersonController>
         [HttpPost]
-        public void Post([FromBody] CreatePersonCommand request) => 
+        public Task<Guid> Post([FromBody] CreatePersonCommand request) => 
             _mediator.Send(request);
 
 
         // PUT api/<PersonController>/5
-        [HttpPut("{id}")]
-        public void Put([FromBody] UpdatePersonCommand request) =>
+        [HttpPut]
+        public Task Put([FromBody] UpdatePersonCommand request) =>
             _mediator.Send(request);
 
         // DELETE api/<PersonController>/5
-        [HttpDelete("{id}")]
-        public void Delete([FromBody] DeletePersonCommand request) =>
+        [HttpDelete]
+        public Task Delete([FromBody] DeletePersonCommand request) =>
             _mediator.Send(request);
     }
 }

@@ -1,4 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Queries.Application.Accounts;
+using Queries.Application.Persons;
+using Queries.Core.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +17,33 @@ namespace Queries.Api.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        // GET: api/<AccountController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IMediator _mediator;
+        private readonly IConfiguration _configuration;
+
+        public AccountController(
+            IMediator mediator,
+            IConfiguration configuration
+            )
         {
-            return new string[] { "value1", "value2" };
+            _mediator = mediator;
+            _configuration = configuration;
         }
 
-        // GET api/<AccountController>/5
+        // GET: api/<PersonController>
+        [HttpGet]
+        public Task<IReadOnlyCollection<Account>> Get() =>
+            _mediator.Send(new GetAllAccountQuery());
+
+
+        // GET api/<PersonController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<AccountController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<AccountController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<AccountController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpGet]
+        [Route("GetLastUpdate")]
+        public string GetLastUpdate() => _configuration["LastUpdate"];
     }
 }

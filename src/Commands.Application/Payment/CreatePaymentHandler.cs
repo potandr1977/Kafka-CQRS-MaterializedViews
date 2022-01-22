@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Commands.Application.Commands
 {
-    public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand>
+    public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, Guid>
     {
         private readonly IPaymentService _paymentService;
 
@@ -16,11 +16,13 @@ namespace Commands.Application.Commands
             _paymentService = paymentService;
         }
 
-        public async Task<Unit> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
         {
+            var newGuid = Guid.NewGuid();
+
             var payment = new Payment
             {
-                Id = Guid.NewGuid(),
+                Id = newGuid,
                 AccountId = request.AccountId,
                 PaymentType = request.PaymentType,
                 Sum = request.Sum
@@ -28,7 +30,7 @@ namespace Commands.Application.Commands
 
             await _paymentService.Save(payment);
 
-            return Unit.Value;
+            return newGuid;
         }
     }
 }

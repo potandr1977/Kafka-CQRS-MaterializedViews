@@ -3,7 +3,7 @@ using System;
 
 namespace Commands.Application.Commands
 {
-    public class CreateAccountCommand : IRequest
+    public class CreateAccountCommand : IRequest<Guid>
     {
         public string Name { get; set; }
 

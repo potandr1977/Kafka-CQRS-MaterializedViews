@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Commands.Application.Commands
 {
-    public class CreatePersonHandler : IRequestHandler<CreatePersonCommand>
+    public class CreatePersonHandler : IRequestHandler<CreatePersonCommand, Guid>
     {
         private readonly IPersonService _personService;
 
@@ -16,18 +16,19 @@ namespace Commands.Application.Commands
             _personService = paymentService;
         }
 
-        public async Task<Unit> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
         {
+            var newGuid = Guid.NewGuid();
             var person = new Person
             {
-                Id = Guid.NewGuid(),
+                Id = newGuid,
                 Name = request.Name,
                 Inn = request.Inn
             };
 
             await _personService.Save(person);
 
-            return Unit.Value;
+            return newGuid;
         }
     }
 }

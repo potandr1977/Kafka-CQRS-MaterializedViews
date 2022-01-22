@@ -4,7 +4,7 @@ using System;
 
 namespace Commands.Application.Commands
 {
-    public class CreatePaymentCommand : IRequest
+    public class CreatePaymentCommand : IRequest<Guid>
     {
         public Guid AccountId { get; init; }
 
