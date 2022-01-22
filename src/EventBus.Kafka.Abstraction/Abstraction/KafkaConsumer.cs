@@ -12,8 +12,12 @@ namespace EventBus.Kafka.Abstraction
         private readonly ConsumerConfig _config;
         private IConsumer<TKey, TValue> _consumer;
         private string _topicName;
+        private Action<TKey, TValue> _handler;
 
-        public KafkaConsumer(string GroupId, string TopicName)
+        public KafkaConsumer(
+            string GroupId, 
+            string TopicName,
+            Action<TKey, TValue> handler)
         {
             _config = new ConsumerConfig
             {
@@ -22,16 +26,16 @@ namespace EventBus.Kafka.Abstraction
                 AutoOffsetReset = AutoOffsetReset.Earliest
             };
             _topicName = TopicName;
-
+            _handler = handler;
         }
 
-        public Task Consume(Action<TKey, TValue> handler, CancellationToken stoppingToken)
+        public Task Consume(CancellationToken stoppingToken)
         {
-            return Consume(handler, null, null, stoppingToken);
+            return Consume(null, null, stoppingToken);
         }
 
 
-        public async Task Consume(Action<TKey,TValue> handler, int? partition, int? offset, CancellationToken stoppingToken)
+        public async Task Consume(int? partition, int? offset, CancellationToken stoppingToken)
         {
             var jsonSerializerOptions = new JsonSerializerOptions
             {
@@ -40,7 +44,7 @@ namespace EventBus.Kafka.Abstraction
 
             _consumer = new ConsumerBuilder<TKey, TValue>(_config).SetValueDeserializer(new KafkaDeserializer<TValue>(jsonSerializerOptions)).Build();
 
-            await Task.Run(() => StartConsumerLoop(handler, partition, offset, stoppingToken), stoppingToken);
+            await Task.Run(() => StartConsumerLoop(_handler, partition, offset, stoppingToken), stoppingToken);
         }
 
         public void Close()
