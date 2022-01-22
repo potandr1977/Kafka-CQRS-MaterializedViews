@@ -39,7 +39,6 @@ namespace Projector.Elastic.projections.Payment
             try
             {
                 await _paymentSimpleViewDao.Save(payment);
-                var res = await _paymentSimpleViewDao.GetAll();
             }
             catch (Exception e)
             {

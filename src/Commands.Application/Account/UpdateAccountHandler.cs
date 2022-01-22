@@ -7,25 +7,24 @@ using System.Threading.Tasks;
 
 namespace Commands.Application.Commands
 {
-    public class CreateAccountHandler : IRequestHandler<CreateAccountCommand, Guid>
+    public class UpdateAccountHandler : IRequestHandler<UpdateAccountCommand>
     {
         private readonly IAccountService _accountService;
 
-        public CreateAccountHandler(IAccountService accountService) => _accountService = accountService;
+        public UpdateAccountHandler(IAccountService accountService) => _accountService = accountService;
 
-        public async Task<Guid> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
         {
-            var newGuid = Guid.NewGuid();
             var account = new Account
             {
-                Id = newGuid,
+                Id = request.Id,
                 Name = request.Name,
                 PersonId = request.PersonId
             };
 
             await _accountService.Save(account);
 
-            return newGuid;
+            return Unit.Value;
         }
     }
 }

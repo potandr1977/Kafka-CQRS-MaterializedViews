@@ -12,5 +12,9 @@ namespace Domain.DataAccess
         public Task<List<Account>> GetAll();
         
         public Task<Account> GetById(Guid id);
+
+        public Task<List<Account>> GetByPersonId(Guid personId);
+
+        public Task DeleteById(Guid id);
     }
 }

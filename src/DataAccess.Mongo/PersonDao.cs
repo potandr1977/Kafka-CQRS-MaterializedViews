@@ -13,17 +13,11 @@ namespace DataAccess.Mongo
     {
         private readonly IMongoDatabase database;
 
-        public PersonDao(IMongoClient mongoClient)
-        {
-            database = mongoClient.GetDatabase(MongoSettings.DbName);
-        }
+        public PersonDao(IMongoClient mongoClient) => database = mongoClient.GetDatabase(MongoSettings.DbName);
 
         private IMongoCollection<Person> Persons => database.GetCollection<Person>(MongoSettings.PersonsCollectionName);
 
-        public Task Save(Person author)
-        {
-            return Persons.InsertOneAsync(author);
-        }
+        public Task Save(Person author) => Persons.InsertOneAsync(author);
 
         public Task<List<Person>> GetAll()
         {
@@ -33,9 +27,9 @@ namespace DataAccess.Mongo
             return Persons.Find(filter).ToListAsync();
         }
 
-        public Task<Person> GetById(Guid id)
-        {
-            return Persons.Find(new BsonDocument("Id", id.ToByteArray())).FirstOrDefaultAsync();
-        }
+        public Task<Person> GetById(Guid id) => Persons.Find(person => person.Id == id).FirstOrDefaultAsync();
+
+        public Task DeleteById(Guid id) => Persons.DeleteOneAsync(account => account.Id == id);
+    
     }
 }

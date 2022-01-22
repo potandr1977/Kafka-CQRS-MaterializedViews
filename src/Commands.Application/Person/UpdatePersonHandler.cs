@@ -1,34 +1,32 @@
 ﻿using Domain.Models;
 using Domain.Services;
 using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Commands.Application.Commands
 {
-    public class CreatePersonHandler : IRequestHandler<CreatePersonCommand, Guid>
+    public class UpdatePersonHandler : IRequestHandler<UpdatePersonCommand>
     {
         private readonly IPersonService _personService;
 
-        public CreatePersonHandler(IPersonService paymentService)
+        public UpdatePersonHandler(IPersonService paymentService)
         {
             _personService = paymentService;
         }
 
-        public async Task<Guid> Handle(CreatePersonCommand request, CancellationToken cancellationToken)
+        public async Task<Unit> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
         {
-            var newGuid = Guid.NewGuid();
             var person = new Person
             {
-                Id = newGuid,
+                Id = request.Id,
                 Name = request.Name,
                 Inn = request.Inn
             };
 
             await _personService.Save(person);
 
-            return newGuid;
+            return Unit.Value;
         }
     }
 }

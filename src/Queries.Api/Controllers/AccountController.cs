@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Queries.Application.Accounts;
 using Queries.Application.Persons;
 using Queries.Core.models;
 using System;
@@ -14,12 +15,12 @@ namespace Queries.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PersonController : ControllerBase
+    public class AccountController : ControllerBase
     {
         private readonly IMediator _mediator;
         private readonly IConfiguration _configuration;
 
-        public PersonController(
+        public AccountController(
             IMediator mediator,
             IConfiguration configuration)
         {
@@ -29,8 +30,8 @@ namespace Queries.Api.Controllers
 
         // GET: api/<PersonController>
         [HttpGet]
-        public Task<IReadOnlyCollection<Person>> Get() =>
-            _mediator.Send(new GetAllPersonQuery());
+        public Task<IReadOnlyCollection<Account>> Get() =>
+            _mediator.Send(new GetAllAccountQuery());
 
 
         // GET api/<PersonController>/5
@@ -43,6 +44,5 @@ namespace Queries.Api.Controllers
         [HttpGet]
         [Route("GetLastUpdate")]
         public string GetLastUpdate() => _configuration["LastUpdate"];
-            
     }
 }
