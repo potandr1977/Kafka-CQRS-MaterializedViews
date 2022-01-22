@@ -14,7 +14,8 @@ namespace LoadingConsole
         static async Task Main(string[] args)
         {
             var personId = await AddPerson();
-            var accoutnId = await AddAccount(personId);
+            var accountId = await AddAccount(personId);
+            var paymentId = await AddPayment(accountId);
             Console.WriteLine("Hello World!");
         }
 
@@ -39,9 +40,22 @@ namespace LoadingConsole
                 new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
             client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
 
-            var content = new StringContent("{"+$"\"name\":\"Account1\", \"personid\":{personId}"+"}", Encoding.UTF8, "application/json");
+            var content = new StringContent($"{{\"name\":\"Account1\", \"personid\":{personId}}}", Encoding.UTF8, "application/json");
 
             var msg = await client.PostAsync($"{url}/api/Account/", content);
+
+            return await msg.Content.ReadAsStringAsync();
+        }
+        private static async Task<string> AddPayment(string accountId)
+        {
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(
+                new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json"));
+            client.DefaultRequestHeaders.Add("User-Agent", ".NET Foundation Repository Reporter");
+                       
+            var content = new StringContent($"{{\"accountid\":{accountId}, \"sum\":\"10\",\"paymenttype\":1}}", Encoding.UTF8, "application/json");
+
+            var msg = await client.PostAsync($"{url}/api/Payment/", content);
 
             return await msg.Content.ReadAsStringAsync();
         }

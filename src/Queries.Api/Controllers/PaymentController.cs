@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Queries.Application.Payments;
+using Queries.Core.models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,36 +16,32 @@ namespace Queries.Api.Controllers
     [ApiController]
     public class PaymentController : ControllerBase
     {
-        // GET: api/<PaymentController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        private readonly IMediator _mediator;
+        private readonly IConfiguration _configuration;
+
+        public PaymentController(
+            IMediator mediator,
+            IConfiguration configuration)
         {
-            return new string[] { "value1", "value2" };
+            _mediator = mediator;
+            _configuration = configuration;
         }
 
-        // GET api/<PaymentController>/5
+        // GET: api/<PersonController>
+        [HttpGet]
+        public Task<IReadOnlyCollection<Payment>> Get() =>
+            _mediator.Send(new GetAllPaymentQuery());
+
+
+        // GET api/<PersonController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
             return "value";
         }
 
-        // POST api/<PaymentController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<PaymentController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<PaymentController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+        [HttpGet]
+        [Route("GetLastUpdate")]
+        public string GetLastUpdate() => _configuration["LastUpdate"];
     }
 }

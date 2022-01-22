@@ -14,7 +14,7 @@ namespace Queries.Application.Accounts
         public GetAllAccountHandler(IAccountSimpleViewDao accountSimpleViewDao) =>
             _accountSimpleViewDao = accountSimpleViewDao;
 
-        public Task<IReadOnlyCollection<Account>> Handle(GetAllAccountQuery request, CancellationToken cancellationToken) =>
+        public Task<IReadOnlyCollection<Account>> Handle(GetAllAccountQuery request, CancellationToken _) =>
             _accountSimpleViewDao.GetAll();
     }
 }

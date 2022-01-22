@@ -22,8 +22,7 @@ namespace Queries.Api.Controllers
 
         public AccountController(
             IMediator mediator,
-            IConfiguration configuration
-            )
+            IConfiguration configuration)
         {
             _mediator = mediator;
             _configuration = configuration;
