@@ -28,6 +28,8 @@ namespace EventBus.Kafka.Abstraction
                 TopicName,
                  (key,value) => {
                     var messageHandler = serviceCollection.BuildServiceProvider().GetRequiredService<IMessageHandler<TMessage>>();
+
+                    //will be executed synchronously
                     messageHandler.HandleAsync(value);
                 });
 
