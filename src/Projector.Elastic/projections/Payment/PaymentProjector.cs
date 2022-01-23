@@ -1,5 +1,6 @@
 ﻿using Domain.DataAccess;
 using EventBus.Kafka;
+using EventBus.Kafka.Abstraction;
 using EventBus.Kafka.Abstraction.Enums;
 using Messages;
 using Queries.Core.dataaccess;
@@ -12,12 +13,12 @@ namespace Projector.Elastic.projections.Payment
     {
         private readonly IAccountDao _accountDao;
         private readonly IPaymentSimpleViewDao _paymentSimpleViewDao;
-        private readonly IKafkaPaymentProducer _kafkaPaymentProducer;
+        private readonly IKafkaProducer<UpdatePaymentProjectionMessage> _kafkaPaymentProducer;
 
         public PaymentProjector(
             IAccountDao accountDao,
             IPaymentSimpleViewDao paymentSimpleViewDao,
-            IKafkaPaymentProducer kafkaPaymentProducer)
+            IKafkaProducer<UpdatePaymentProjectionMessage> kafkaPaymentProducer)
         {
             _accountDao = accountDao;
             _paymentSimpleViewDao = paymentSimpleViewDao;
@@ -45,8 +46,7 @@ namespace Projector.Elastic.projections.Payment
                 Console.WriteLine(e.Message);
             }
 
-            await _kafkaPaymentProducer.ProduceAsync(message, (int) PartitionEnum.QueriesApiFirst);
-            await _kafkaPaymentProducer.ProduceAsync(message, (int) PartitionEnum.QueriesApiSecond);
+            await _kafkaPaymentProducer.ProduceAsync(message);
         }
     }
 }

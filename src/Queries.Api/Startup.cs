@@ -1,6 +1,7 @@
 using DataAccess.Elastic.Configure;
-using EventBus.Kafka;
+using EventBus.Kafka.Abstraction;
 using MediatR;
+using Messages;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Nest;
+using Queries.Api.KafkaHandlers;
 using Queries.Application.Persons;
 using Queries.Core.models;
 using Settings;
@@ -44,9 +46,17 @@ namespace Queries.Api
                 return new ElasticClient(settings);
             });
 
-            services.AddSingleton<IKafkaAccountConsumer, KafkaAccountConsumer>();
-            services.AddSingleton<IKafkaPaymentConsumer, KafkaPaymentConsumer>();
-            services.AddSingleton<IKafkaPersonConsumer, KafkaPersonConsumer>();
+            services.AddKafkaConsumer<UpdateAccountProjectionMessage, UpdateAccountProjectionHandler>(
+                KafkaSettings.ProjectionTopics.AccountTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
+
+            services.AddKafkaConsumer<UpdatePaymentProjectionMessage, UpdatePaymentProjectionHandler>(
+                KafkaSettings.ProjectionTopics.PaymentTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
+
+            services.AddKafkaConsumer<UpdatePersonProjectionMessage, UpdatePersonProjectionHandler>(
+                KafkaSettings.ProjectionTopics.PersonTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
 
             services.AddElasticDataAccessObjects();
 
@@ -59,12 +69,11 @@ namespace Queries.Api
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
-            IApplicationBuilder app, 
-            IWebHostEnvironment env,
-            IKafkaAccountConsumer kafkaAccountConsumer,
-            IKafkaPaymentConsumer kafkaPaymentConsumer,
-            IKafkaPersonConsumer kafkaPersonConsumer
-            )
+            IApplicationBuilder app,
+            IKafkaConsumer<UpdateAccountProjectionMessage> kafkaAccountConsumer,
+            IKafkaConsumer<UpdatePaymentProjectionMessage> kafkaPaymentConsumer,
+            IKafkaConsumer<UpdatePersonProjectionMessage> kafkaPersonConsumer,
+            IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -76,41 +85,9 @@ namespace Queries.Api
             CancellationTokenSource cts = new CancellationTokenSource();
             CancellationToken stoppingToken = cts.Token;
 
-            var partitionNumber = Configuration["PartitionNumber"];
-            
-            void IncUpdateCounter()
-            {
-                var lastUpdateStr = Configuration["LastUpdate"];
-                _ = int.TryParse(lastUpdateStr, out var lastUpdate);
-                Configuration["LastUpdate"] = (++lastUpdate).ToString();
-            }
-
-            if (int.TryParse(partitionNumber, out var partition))
-            {
-                //accounts consumers
-                var accountTask = kafkaAccountConsumer.Consume(
-                    (key, value) => {
-                        Console.WriteLine("Account projection changed AccountId:{value.Id}");
-                        IncUpdateCounter();
-                    },
-                    partition, null, stoppingToken);
-                //payments consumers
-                var paymentTask = kafkaPaymentConsumer.Consume(
-                    (key, value) => {
-                        Console.WriteLine("Payment projection changed PaymentId:{value.Id}");
-                        IncUpdateCounter();
-                    },
-                    partition, null, stoppingToken);
-
-
-                //persons consumers
-                var personTask = kafkaPersonConsumer.Consume(
-                    (key, value) => {
-                        Console.WriteLine("Person projection changed PersonId:{value.Id}");
-                        IncUpdateCounter();
-                    },
-                    partition, null, stoppingToken);
-            }
+            kafkaAccountConsumer.Consume(stoppingToken);
+            kafkaPaymentConsumer.Consume(stoppingToken);
+            kafkaPersonConsumer.Consume(stoppingToken);
 
             app.UseHttpsRedirection();
 

@@ -1,8 +1,9 @@
 using Business.Configuration;
 using Commands.Application.Commands;
 using DataAccess.Mongo.Configure;
-using EventBus.Kafka;
+using EventBus.Kafka.Abstraction;
 using MediatR;
+using Messages;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -33,9 +34,10 @@ namespace Commands.Api
             services.AddSingleton<IMongoClient>(s =>
                 new MongoClient(MongoSettings.ConnectionString)
             );
-            services.AddSingleton<IKafkaAccountProducer,KafkaAccountProducer>();
-            services.AddSingleton<IKafkaPaymentProducer, KafkaPaymentProducer>();
-            services.AddSingleton<IKafkaPersonProducer, KafkaPersonProducer>();
+
+            services.AddKafkaProducer<UpdateAccountProjectionMessage>(KafkaSettings.CommandTopics.AccountTopicName);
+            services.AddKafkaProducer<UpdatePaymentProjectionMessage>(KafkaSettings.CommandTopics.PaymentTopicName);
+            services.AddKafkaProducer<UpdatePersonProjectionMessage>(KafkaSettings.CommandTopics.PersonTopicName);
 
             services.AddMongoDataAccessObjects();
             services.AddDomainServices();

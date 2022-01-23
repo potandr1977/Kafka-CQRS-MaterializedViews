@@ -1,10 +1,13 @@
 using DataAccess.Elastic.Configure;
 using DataAccess.Mongo.Configure;
 using EventBus.Kafka;
+using EventBus.Kafka.Abstraction;
+using Messages;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using Nest;
+using Projector.Elastic.KafkaHandlers;
 using Projector.Elastic.projections.Account;
 using Projector.Elastic.projections.Payment;
 using Projector.Elastic.projections.Person;
@@ -41,13 +44,21 @@ namespace Projector.Elastic
                         return new ElasticClient(settings);
                     });
 
-                    services.AddSingleton<IKafkaAccountConsumer, KafkaAccountConsumer>();
-                    services.AddSingleton<IKafkaPaymentConsumer, KafkaPaymentConsumer>();
-                    services.AddSingleton<IKafkaPersonConsumer, KafkaPersonConsumer>();
+                    services.AddKafkaConsumer<UpdateAccountProjectionMessage, UpdateAccountProjectionHandler>(
+                        KafkaSettings.CommandTopics.AccountTopicName,
+                        KafkaSettings.Groups.BusinessGroupId);
 
-                    services.AddSingleton<IKafkaAccountProducer, KafkaAccountProducer>();
-                    services.AddSingleton<IKafkaPaymentProducer, KafkaPaymentProducer>();
-                    services.AddSingleton<IKafkaPersonProducer, KafkaPersonProducer>();
+                    services.AddKafkaConsumer<UpdatePaymentProjectionMessage, UpdatePaymentProjectionHandler>(
+                        KafkaSettings.CommandTopics.PaymentTopicName,
+                        KafkaSettings.Groups.BusinessGroupId);
+
+                    services.AddKafkaConsumer<UpdatePersonProjectionMessage, UpdatePersonProjectionHandler>(
+                        KafkaSettings.CommandTopics.PersonTopicName,
+                        KafkaSettings.Groups.BusinessGroupId);
+
+                    services.AddKafkaProducer<UpdateAccountProjectionMessage>(KafkaSettings.ProjectionTopics.AccountTopicName);
+                    services.AddKafkaProducer<UpdatePaymentProjectionMessage>(KafkaSettings.ProjectionTopics.PaymentTopicName);
+                    services.AddKafkaProducer<UpdatePersonProjectionMessage>(KafkaSettings.ProjectionTopics.PersonTopicName);
 
                     services.AddSingleton<IAccountProjector, AccountProjector>();
                     services.AddSingleton<IPaymentProjector, PaymentProjector>();

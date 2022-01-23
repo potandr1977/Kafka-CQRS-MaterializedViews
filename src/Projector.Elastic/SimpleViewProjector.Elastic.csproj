@@ -17,7 +17,6 @@
     <ProjectReference Include="..\DataAccess.Elastic\DataAccess.Elastic.csproj" />
     <ProjectReference Include="..\DataAccess.Mongo\DataAccess.Mongo.csproj" />
     <ProjectReference Include="..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
-    <ProjectReference Include="..\EventBus.Kafka\EventBus.Kafka.csproj" />
     <ProjectReference Include="..\Queries.Core\Queries.Core.csproj" />
     <ProjectReference Include="..\Settings\Settings.csproj" />
   </ItemGroup>

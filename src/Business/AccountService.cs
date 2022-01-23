@@ -3,6 +3,7 @@ using Domain.DataAccess;
 using Domain.Models;
 using Domain.Services;
 using EventBus.Kafka;
+using EventBus.Kafka.Abstraction;
 using EventBus.Kafka.Abstraction.Enums;
 using Messages;
 using System;
@@ -16,12 +17,12 @@ namespace Business
     {
         private readonly IAccountDao _accountDao;
         private readonly IPaymentDao _paymentDao;
-        private readonly IKafkaAccountProducer _kafkaAccountProducer;
+        private readonly IKafkaProducer<UpdateAccountProjectionMessage> _kafkaAccountProducer;
 
         public AccountService(
             IAccountDao accountDao,
             IPaymentDao paymentDao,
-            IKafkaAccountProducer kafkaProducer)
+            IKafkaProducer<UpdateAccountProjectionMessage> kafkaProducer)
         {
             _accountDao = accountDao;
             _paymentDao = paymentDao;
@@ -55,8 +56,7 @@ namespace Business
                 AccountId = account.Id,
                 Name = account.Name,
                 PersonId = account.PersonId
-            },
-            (int) PartitionEnum.Projector);
+            });
         }
     }
 }
