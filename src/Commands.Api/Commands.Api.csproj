@@ -22,7 +22,6 @@
     <ProjectReference Include="..\DataAccess.Mongo\DataAccess.Mongo.csproj" />
     <ProjectReference Include="..\Domain\Domain.csproj" />
     <ProjectReference Include="..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
-    <ProjectReference Include="..\EventBus.Kafka\EventBus.Kafka.csproj" />
   </ItemGroup>
 
 </Project>

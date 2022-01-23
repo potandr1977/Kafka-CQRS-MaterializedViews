@@ -1,4 +1,5 @@
 ﻿using EventBus.Kafka;
+using EventBus.Kafka.Abstraction;
 using EventBus.Kafka.Abstraction.Enums;
 using Messages;
 using Queries.Core.dataaccess;
@@ -10,11 +11,11 @@ namespace Projector.Elastic.projections.Person
     public class PersonProjector : IPersonProjector
     {
         private readonly IPersonSimpleViewDao _personSimpleViewDao;
-        private readonly IKafkaPersonProducer _kafkaPersonProducer;
+        private readonly IKafkaProducer<UpdatePersonProjectionMessage> _kafkaPersonProducer;
 
         public PersonProjector(
             IPersonSimpleViewDao personSimpleViewDao,
-            IKafkaPersonProducer kafkaPersonProducer)
+            IKafkaProducer<UpdatePersonProjectionMessage> kafkaPersonProducer)
         {
             _personSimpleViewDao = personSimpleViewDao;
             _kafkaPersonProducer = kafkaPersonProducer;
@@ -37,8 +38,7 @@ namespace Projector.Elastic.projections.Person
                 Console.WriteLine(e.Message);
             }
 
-            await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiFirst);
-            await _kafkaPersonProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiSecond);
+            await _kafkaPersonProducer.ProduceAsync(message);
         }
     }
 }

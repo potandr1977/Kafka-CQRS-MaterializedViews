@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace EventBus.Kafka.Abstraction
 {
-    public interface IKafkaConsumer<TKey, TValue>
+    public interface IKafkaConsumer<TMessage>
     {
         Task Consume(CancellationToken cancellationToken);
 

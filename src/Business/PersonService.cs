@@ -1,27 +1,26 @@
 ﻿using DataAccess.DataAccess;
 using Domain.Models;
 using Domain.Services;
-using EventBus.Kafka;
-using EventBus.Kafka.Abstraction.Enums;
 using Messages;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
 using Domain.DataAccess;
+using EventBus.Kafka.Abstraction;
 
 namespace Business
 {
     public class PersonService : IPersonService
     {
         private readonly IPersonDao _personDao;
-        private readonly IKafkaPersonProducer _kafkaPersonProducer;
+        private readonly IKafkaProducer<UpdatePersonProjectionMessage> _kafkaPersonProducer;
         private readonly IAccountDao _accountDao;
 
         public PersonService(
             IPersonDao personDao,
             IAccountDao accountDao,
-            IKafkaPersonProducer kafkaPersonProducer)
+            IKafkaProducer<UpdatePersonProjectionMessage> kafkaPersonProducer)
         {
             _personDao = personDao;
             _accountDao = accountDao;
@@ -53,8 +52,7 @@ namespace Business
                 PersonId = person.Id,
                 Name = person.Name,
                 Inn = person.Inn
-            },
-            (int) PartitionEnum.Projector);
+            });
         }
     }
 }

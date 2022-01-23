@@ -1,5 +1,6 @@
 ﻿using DataAccess.DataAccess;
 using EventBus.Kafka;
+using EventBus.Kafka.Abstraction;
 using EventBus.Kafka.Abstraction.Enums;
 using Messages;
 using Queries.Core.dataaccess;
@@ -12,12 +13,12 @@ namespace Projector.Elastic.projections.Account
     {
         private readonly IPersonDao _personDao;
         private readonly IAccountSimpleViewDao _accountSimpleViewDao;
-        private readonly IKafkaAccountProducer _kafkaAccountProducer;
+        private readonly IKafkaProducer<UpdateAccountProjectionMessage> _kafkaAccountProducer;
 
         public AccountProjector(
             IPersonDao personDao, 
             IAccountSimpleViewDao accountSimpleViewDao,
-            IKafkaAccountProducer kafkaAccountProducer)
+            IKafkaProducer<UpdateAccountProjectionMessage> kafkaAccountProducer)
         {
             _personDao = personDao;
             _accountSimpleViewDao = accountSimpleViewDao;
@@ -43,8 +44,7 @@ namespace Projector.Elastic.projections.Account
                 Console.WriteLine(e.Message);
             }
 
-            await _kafkaAccountProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiFirst);
-            await _kafkaAccountProducer.ProduceAsync(message, (int)PartitionEnum.QueriesApiSecond);
+            await _kafkaAccountProducer.ProduceAsync(message);
         }
     }
 }

@@ -1,38 +1,37 @@
-﻿using Messages;
+﻿using EventBus.Kafka.Abstraction.Abstraction;
+using Messages;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace EventBus.Kafka.Abstraction.Extension
+namespace EventBus.Kafka.Abstraction
 {
     public static class ServiceExtension
     {
-        public static IServiceCollection AddKafkaProducer<TKey, TValue>(
+        public static IServiceCollection AddKafkaProducer<TMessage>(
             this IServiceCollection serviceCollection,
-            string TopicName) where TValue : UpdateProjectionMessage
+            string TopicName) where TMessage : UpdateProjectionMessage
         {
-            var producer = new KafkaProducer<TKey, TValue>(TopicName);
-            serviceCollection.AddSingleton<IKafkaProducer<TKey,TValue>>(producer);
+            var producer = new KafkaProducer<TMessage>(TopicName);
+            serviceCollection.AddSingleton<IKafkaProducer<TMessage>>(producer);
 
             return serviceCollection;
         }
-        public static IServiceCollection AddKafkaConsumer<TKey, TValue,TMessageHandler>(
+
+        public static IServiceCollection AddKafkaConsumer<TMessage, TMessageHandler>(
             this IServiceCollection serviceCollection,
             string TopicName,
-            string GroupdId) where TValue : UpdateProjectionMessage where TMessageHandler : IMessageHandler<TValue>, new()
+            string GroupdId) where TMessage : UpdateProjectionMessage where TMessageHandler : class, IMessageHandler<TMessage>
         {
-            var consumer = new KafkaConsumer<TKey, TValue>(
+            serviceCollection.AddSingleton<IMessageHandler<TMessage>, TMessageHandler>();
+
+            var consumer = new KafkaConsumer<string, TMessage>(
                 GroupdId,
                 TopicName,
-                async (key,value) => {
-                    var messageHandler = new TMessageHandler();
-                    await messageHandler.HandleAsync(value);
+                 (key,value) => {
+                    var messageHandler = serviceCollection.BuildServiceProvider().GetRequiredService<IMessageHandler<TMessage>>();
+                    messageHandler.HandleAsync(value);
                 });
 
-            serviceCollection.AddSingleton<IKafkaConsumer<TKey, TValue>>(consumer);
+            serviceCollection.AddSingleton<IKafkaConsumer<TMessage>>(consumer);
 
             return serviceCollection;
         }

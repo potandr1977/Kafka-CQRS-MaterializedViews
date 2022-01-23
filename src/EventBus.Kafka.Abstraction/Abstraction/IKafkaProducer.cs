@@ -2,8 +2,8 @@
 
 namespace EventBus.Kafka.Abstraction
 {
-    public interface IKafkaProducer<TKey, TValue>
+    public interface IKafkaProducer<TMessage>
     {
-        Task ProduceAsync(TKey key, TValue value, int? partitionNum = null);
+        Task ProduceAsync( TMessage value, string key = null, int? partitionNum = null);
     }
 }

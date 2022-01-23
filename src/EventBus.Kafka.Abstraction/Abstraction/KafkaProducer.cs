@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace EventBus.Kafka.Abstraction
 {
-    public class KafkaProducer<TKey, TValue> : IDisposable, IKafkaProducer<TKey, TValue> where TValue : UpdateProjectionMessage
+    public class KafkaProducer<TMessage> : IDisposable, IKafkaProducer<TMessage> where TMessage : UpdateProjectionMessage
     {
-        private readonly IProducer<TKey, TValue> _producer;
+        private readonly IProducer<string, TMessage> _producer;
         private string _topicName;
 
         public KafkaProducer(string Topic)
@@ -24,21 +24,21 @@ namespace EventBus.Kafka.Abstraction
                 PropertyNamingPolicy = JsonNamingPolicy.CamelCase
             };
 
-            _producer = new ProducerBuilder<TKey, TValue>(config).SetValueSerializer(new KafkaDeserializer<TValue>(jsonSerializerOptions)).Build();
+            _producer = new ProducerBuilder<string, TMessage>(config).SetValueSerializer(new KafkaDeserializer<TMessage>(jsonSerializerOptions)).Build();
 
             _topicName = Topic;
         }
 
 
-        public Task ProduceAsync(TKey key, TValue value, int? partitionNum = null)
+        public Task ProduceAsync(TMessage value, string key = null , int? partitionNum = null)
         {
             if (partitionNum.HasValue)
             {
                 var topicPartition = new TopicPartition(_topicName, partitionNum ?? 0);
-                return _producer.ProduceAsync(topicPartition, new Message<TKey, TValue> { Key = key, Value = value });
+                return _producer.ProduceAsync(topicPartition, new Message<string, TMessage> { Key = key, Value = value });
             }
 
-            return _producer.ProduceAsync(_topicName, new Message<TKey, TValue> { Key = key, Value = value });
+            return _producer.ProduceAsync(_topicName, new Message<string, TMessage> { Key = key, Value = value });
         }
 
         public void Dispose()

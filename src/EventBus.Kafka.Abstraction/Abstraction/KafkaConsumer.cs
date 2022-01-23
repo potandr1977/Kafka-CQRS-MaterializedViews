@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EventBus.Kafka.Abstraction
 {
-    public class KafkaConsumer<TKey, TValue> : IDisposable, IKafkaConsumer<TKey, TValue> where TValue : class
+    public class KafkaConsumer<TKey, TValue> : IDisposable, IKafkaConsumer<TValue> where TValue : class
     {
         private readonly ConsumerConfig _config;
         private IConsumer<TKey, TValue> _consumer;

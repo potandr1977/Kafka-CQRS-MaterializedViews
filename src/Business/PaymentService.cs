@@ -2,6 +2,7 @@
 using Domain.Models;
 using Domain.Services;
 using EventBus.Kafka;
+using EventBus.Kafka.Abstraction;
 using EventBus.Kafka.Abstraction.Enums;
 using Messages;
 using System;
@@ -13,11 +14,11 @@ namespace Business
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentDao _paymentDao;
-        private readonly IKafkaPaymentProducer _kafkaPaymentProducer;
+        private readonly IKafkaProducer<UpdatePaymentProjectionMessage> _kafkaPaymentProducer;
 
         public PaymentService(
             IPaymentDao paymentDao,
-            IKafkaPaymentProducer kafkaPaymentProducer)
+            IKafkaProducer<UpdatePaymentProjectionMessage> kafkaPaymentProducer)
         {
             _paymentDao = paymentDao;
             _kafkaPaymentProducer = kafkaPaymentProducer;
@@ -46,8 +47,7 @@ namespace Business
                 AccountId = payment.AccountId,
                 PersonType = (int) payment.PaymentType,
                 Sum = payment.Sum
-            },
-            (int) PartitionEnum.Projector);
+            });
         }
     }
 }

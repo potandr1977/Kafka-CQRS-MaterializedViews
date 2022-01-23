@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
-namespace EventBus.Kafka.Abstraction
+namespace EventBus.Kafka.Abstraction.Abstraction
 {
-    public interface IMessageHandler<TValue>
+    public interface IMessageHandler<TMessage>
     {
-        Task HandleAsync(TValue value);
+        Task HandleAsync(TMessage message);
     }
 }
