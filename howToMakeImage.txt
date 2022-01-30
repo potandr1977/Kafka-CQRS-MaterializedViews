@@ -1,0 +1,3 @@
+from solution folder
+
+"docker build -t commandsapi:k8s src/Commands.Api/Dockerfile ."

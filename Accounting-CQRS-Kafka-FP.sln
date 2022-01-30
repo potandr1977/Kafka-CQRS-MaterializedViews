@@ -52,6 +52,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{12F6185C-7C41-4E46-A534-95CD3DA91CDE}"
 	ProjectSection(SolutionItems) = preProject
 		src\Commands.Api\Dockerfile = src\Commands.Api\Dockerfile
+		howToMakeImage.txt = howToMakeImage.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "commandsapi", "commandsapi", "{31708733-5EA5-4F9D-A19D-0D3226DD1FA2}"
