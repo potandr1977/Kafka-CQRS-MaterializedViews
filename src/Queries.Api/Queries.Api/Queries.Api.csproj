@@ -5,7 +5,7 @@
 	<LangVersion>9</LangVersion>
     <UserSecretsId>dd38b607-d5f5-429b-ab28-0f51ebeb1f2e</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
+    <DockerfileContext>..\..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
@@ -18,10 +18,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccess.Elastic\DataAccess.Elastic.csproj" />
-    <ProjectReference Include="..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
-    <ProjectReference Include="..\Queries.Application\Queries.Application.csproj" />
-    <ProjectReference Include="..\Settings\Settings.csproj" />
+    <ProjectReference Include="..\..\DataAccess.Elastic\DataAccess.Elastic.csproj" />
+    <ProjectReference Include="..\..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
+    <ProjectReference Include="..\..\Queries.Application\Queries.Application.csproj" />
+    <ProjectReference Include="..\..\Settings\Settings.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,7 +5,7 @@
 	<LangVersion>9</LangVersion>
     <UserSecretsId>b81e4824-44af-4c1c-b0bc-bf5bf7bd5b6e</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
+    <DockerfileContext>..\..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
   </PropertyGroup>
 
@@ -13,15 +13,16 @@
     <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="9.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Kubernetes.Tools.Targets" Version="1.1.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Business\Business.csproj" />
-    <ProjectReference Include="..\Commands.Application\Commands.Application.csproj" />
-    <ProjectReference Include="..\DataAccess.Mongo\DataAccess.Mongo.csproj" />
-    <ProjectReference Include="..\Domain\Domain.csproj" />
-    <ProjectReference Include="..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
+    <ProjectReference Include="..\..\Business\Business.csproj" />
+    <ProjectReference Include="..\..\Commands.Application\Commands.Application.csproj" />
+    <ProjectReference Include="..\..\DataAccess.Mongo\DataAccess.Mongo.csproj" />
+    <ProjectReference Include="..\..\Domain\Domain.csproj" />
+    <ProjectReference Include="..\..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,11 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk.Worker">
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
 	<LangVersion>9</LangVersion>
     <UserSecretsId>dotnet-Projector.Elastic-15508B90-54CA-418E-B290-E5C9FDC4149F</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    <DockerfileContext>..\..</DockerfileContext>
+    <DockerfileContext>..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,10 +14,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DataAccess.Elastic\DataAccess.Elastic.csproj" />
-    <ProjectReference Include="..\DataAccess.Mongo\DataAccess.Mongo.csproj" />
-    <ProjectReference Include="..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
-    <ProjectReference Include="..\Queries.Core\Queries.Core.csproj" />
-    <ProjectReference Include="..\Settings\Settings.csproj" />
+    <ProjectReference Include="..\..\DataAccess.Elastic\DataAccess.Elastic.csproj" />
+    <ProjectReference Include="..\..\DataAccess.Mongo\DataAccess.Mongo.csproj" />
+    <ProjectReference Include="..\..\EventBus.Kafka.Abstraction\EventBus.Kafka.Abstraction.csproj" />
+    <ProjectReference Include="..\..\Queries.Core\Queries.Core.csproj" />
+    <ProjectReference Include="..\..\Settings\Settings.csproj" />
   </ItemGroup>
 </Project>
