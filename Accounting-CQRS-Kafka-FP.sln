@@ -70,6 +70,17 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "projectionelastic", "projec
 		src\Projector.Elastic\Dockerfile = src\Projector.Elastic\Dockerfile
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_kubernetes", "_kubernetes", "{521FD567-A739-4B13-89E9-29355A43B282}"
+	ProjectSection(SolutionItems) = preProject
+		src\Kubernetes\commandsapi-deployment.yml = src\Kubernetes\commandsapi-deployment.yml
+		src\Kubernetes\kafka-deployment.yml = src\Kubernetes\kafka-deployment.yml
+		src\Kubernetes\kafka-service.yml = src\Kubernetes\kafka-service.yml
+		src\Kubernetes\projector-deployment.yml = src\Kubernetes\projector-deployment.yml
+		src\Kubernetes\queriesapi-deployment.yml = src\Kubernetes\queriesapi-deployment.yml
+		src\Kubernetes\zookeeper-deployment.yml = src\Kubernetes\zookeeper-deployment.yml
+		src\Kubernetes\zookeeper-service.yml = src\Kubernetes\zookeeper-service.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
