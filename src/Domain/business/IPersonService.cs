@@ -14,5 +14,8 @@ namespace Domain.Services
         public Task<Person> GetById(Guid id);
 
         public Task DeleteById(Guid id);
+
+        public Task AddAccountToPerson(Guid personId, Account account);
+
     }
 }

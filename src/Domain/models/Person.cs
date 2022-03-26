@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Models
 {
@@ -9,5 +10,9 @@ namespace Domain.Models
         public string Name { get; init; }
 
         public string Inn { get; init; }
+
+        public List<Guid> AccountIds { get; init; }
+
+
     }
 }

@@ -17,7 +17,7 @@ namespace DataAccess.Mongo
 
         private IMongoCollection<Person> Persons => database.GetCollection<Person>(MongoSettings.PersonsCollectionName);
 
-        public Task Save(Person author) => Persons.InsertOneAsync(author);
+        public Task Save(Person person) => Persons.InsertOneAsync(person);
 
         public Task<List<Person>> GetAll()
         {

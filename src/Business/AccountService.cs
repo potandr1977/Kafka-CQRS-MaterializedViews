@@ -1,10 +1,7 @@
-﻿using DataAccess.DataAccess;
-using Domain.DataAccess;
+﻿using Domain.DataAccess;
 using Domain.Models;
 using Domain.Services;
-using EventBus.Kafka;
 using EventBus.Kafka.Abstraction;
-using EventBus.Kafka.Abstraction.Enums;
 using Messages;
 using System;
 using System.Collections.Generic;
@@ -16,22 +13,32 @@ namespace Business
     public class AccountService : IAccountService
     {
         private readonly IAccountDao _accountDao;
-        private readonly IPaymentDao _paymentDao;
+        private readonly IPaymentService _paymentService;
         private readonly IKafkaProducer<UpdateAccountProjectionMessage> _kafkaAccountProducer;
 
         public AccountService(
             IAccountDao accountDao,
-            IPaymentDao paymentDao,
+            IPaymentService paymentService,
             IKafkaProducer<UpdateAccountProjectionMessage> kafkaProducer)
         {
             _accountDao = accountDao;
-            _paymentDao = paymentDao;
+            _paymentService = paymentService;
             _kafkaAccountProducer = kafkaProducer;
+        }
+
+        public Task AddPaymentToAccount(Guid accountId, Payment payment)
+        {
+            if (payment.AccountId != accountId)
+            {
+                throw new InvalidOperationException($"Payment {payment.Id} belongs to other account");
+            }
+
+            return _paymentService.Save(payment);
         }
 
         public async Task DeleteById(Guid id)
         {
-            var payments = await _paymentDao.GetByAccountId(id);
+            var payments = await _paymentService.GetByAccountId(id);
             if (payments.Any())
             {
                 return;

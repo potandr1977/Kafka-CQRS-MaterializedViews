@@ -31,6 +31,11 @@ namespace Business
             return _paymentDao.GetAll();
         }
 
+        public Task<List<Payment>> GetByAccountId(Guid accountId)
+        {
+            return _paymentDao.GetByAccountId(accountId);
+        }
+
         public Task<Payment> GetById(Guid id)
         {
             return _paymentDao.GetById(id);

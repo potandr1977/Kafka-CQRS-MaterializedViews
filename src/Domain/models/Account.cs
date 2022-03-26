@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Domain.Models
 {
@@ -10,5 +11,6 @@ namespace Domain.Models
 
         public Guid PersonId { get; init; }
 
+        public List<Guid>  Payments { get; init; }
     }
 }
