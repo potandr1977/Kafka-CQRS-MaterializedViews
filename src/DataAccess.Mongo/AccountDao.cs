@@ -15,8 +15,14 @@ namespace DataAccess.Mongo
         public AccountDao(IMongoClient mongoClient) => database = mongoClient.GetDatabase(MongoSettings.DbName);
 
         private IMongoCollection<Account> Accounts => database.GetCollection<Account>(MongoSettings.AccountsCollectionName);
-
-        public Task Save(Account author) => Accounts.InsertOneAsync(author);
+        
+        public Task Save(Account account) => Accounts.ReplaceOneAsync(
+            x => x.Id == account.Id,
+            account,
+            new ReplaceOptions
+            {
+                IsUpsert = true 
+            });
 
         public Task<List<Account>> GetAll()
         {

@@ -16,7 +16,13 @@ namespace DataAccess.Mongo
 
         private IMongoCollection<Payment> Payments => database.GetCollection<Payment>(MongoSettings.PaymentsCollectionName);
 
-        public Task Save(Payment author) => Payments.InsertOneAsync(author);
+        public Task Save(Payment payment) => Payments.ReplaceOneAsync(
+            x => x.Id == payment.Id,
+            payment,
+            new ReplaceOptions
+            { 
+                IsUpsert = true 
+            });
 
         public Task<List<Payment>> GetAll()
         {

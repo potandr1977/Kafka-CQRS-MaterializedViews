@@ -17,7 +17,13 @@ namespace DataAccess.Mongo
 
         private IMongoCollection<Person> Persons => database.GetCollection<Person>(MongoSettings.PersonsCollectionName);
 
-        public Task Save(Person person) => Persons.InsertOneAsync(person);
+        public Task Save(Person person) => Persons.ReplaceOneAsync(
+            x => x.Id == person.Id, 
+            person, 
+            new ReplaceOptions
+            { 
+                IsUpsert = true
+            });
 
         public Task<List<Person>> GetAll()
         {
