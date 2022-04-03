@@ -41,10 +41,23 @@ namespace EventBus.Kafka.Abstraction
             return _producer.ProduceAsync(_topicName, new Message<string, TMessage> { Key = key, Value = value });
         }
 
+        public void Produce(TMessage value, string key = null, int? partitionNum = null)
+        {
+            if (partitionNum.HasValue)
+            {
+                var topicPartition = new TopicPartition(_topicName, partitionNum ?? 0);
+                _producer.Produce(topicPartition, new Message<string, TMessage> { Key = key, Value = value });
+            }
+
+            _producer.Produce(_topicName, new Message<string, TMessage> { Key = key, Value = value });
+        }
+
         public void Dispose()
         {
             _producer.Flush();
             _producer.Dispose();
         }
+
+        
     }
 }

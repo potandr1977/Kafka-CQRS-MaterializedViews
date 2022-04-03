@@ -27,9 +27,8 @@ namespace DataAccess.Mongo
         public Task<List<Payment>> GetAll()
         {
             var builder = new FilterDefinitionBuilder<Payment>();
-            var filter = builder.Empty;
 
-            return Payments.Find(filter).ToListAsync();
+            return Payments.Find(builder.Empty).ToListAsync();
         }
 
         public Task<Payment> GetById(Guid id) => Payments.Find(payment => payment.Id == id).FirstOrDefaultAsync();

@@ -62,7 +62,8 @@ namespace Business
         {
             await _personDao.Save(person);
 
-            await _kafkaPersonProducer.ProduceAsync(new UpdatePersonProjectionMessage
+            //We don't want wait delivery confirmation.
+            _kafkaPersonProducer.Produce(new UpdatePersonProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 PersonId = person.Id,
