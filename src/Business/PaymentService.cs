@@ -26,10 +26,7 @@ namespace Business
 
         public Task DeleteById(Guid id) => _paymentDao.DeleteById(id);
 
-        public Task<List<Payment>> GetAll()
-        {
-            return _paymentDao.GetAll();
-        }
+        public Task<List<Payment>> GetPage(int pageNo, int PageSize) => _paymentDao.GetPage(pageNo, PageSize);
 
         public Task<List<Payment>> GetByAccountId(Guid accountId)
         {

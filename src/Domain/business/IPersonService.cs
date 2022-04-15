@@ -9,7 +9,7 @@ namespace Domain.Services
     {
         public Task Save(Person payment);
 
-        public Task<List<Person>> GetAll();
+        public Task<List<Person>> GetPage(int pageNo, int PageSize);
 
         public Task<Person> GetById(Guid id);
 

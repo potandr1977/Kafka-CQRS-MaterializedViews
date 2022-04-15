@@ -9,7 +9,7 @@ namespace Domain.DataAccess
     {
         public Task Save(Account author);
 
-        public Task<List<Account>> GetAll();
+        public Task<List<Account>> GetPage(int page, int pageSize);
         
         public Task<Account> GetById(Guid id);
 

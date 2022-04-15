@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Settings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Mongo
@@ -24,12 +25,15 @@ namespace DataAccess.Mongo
                 IsUpsert = true 
             });
 
-        public Task<List<Account>> GetAll()
+        public async Task<List<Account>> GetPage(int pageNo, int pageSize)
         {
-            var builder = new FilterDefinitionBuilder<Account>();
-            var filter = builder.Empty;
+            var (totalPages, data) = await Accounts.AggregateByPage(
+                Builders<Account>.Filter.Empty,
+                Builders<Account>.Sort.Ascending(x => x.Name),
+                page: pageNo,
+                pageSize: pageSize);
 
-            return Accounts.Find(filter).ToListAsync();
+            return data.ToList();
         }
 
         public Task<Account> GetById(Guid id) =>

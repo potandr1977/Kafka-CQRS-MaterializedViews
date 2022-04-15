@@ -11,6 +11,8 @@ namespace Domain.Models
 
         public decimal Sum { get; init; }
 
+        public DateTime CreateDate { get; init; }
+
         public PaymentTypeEnum PaymentType { get; init; }
     }
 }

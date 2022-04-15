@@ -11,6 +11,8 @@ namespace Domain.Models
 
         public string Inn { get; init; }
 
+        public DateTime CreateDate { get; init; }
+
         public List<Guid> AccountIds { get; init; }
 
 
