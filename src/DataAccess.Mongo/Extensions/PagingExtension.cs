@@ -52,11 +52,3 @@ namespace DataAccess.Mongo
         }
     }
 }
-
-/*
-var results = await collection.AggregateByPage(
-    Builders<Person>.Filter.Empty,
-    Builders<Person>.Sort.Ascending(x => x.Surname),
-    page: 2,
-    pageSize: 5);
- */
