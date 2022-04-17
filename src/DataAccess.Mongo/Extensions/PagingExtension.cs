@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DataAccess.Mongo
@@ -19,15 +18,15 @@ namespace DataAccess.Mongo
             var countFacet = AggregateFacet.Create("count",
                 PipelineDefinition<TDocument, AggregateCountResult>.Create(new[]
                 {
-                PipelineStageDefinitionBuilder.Count<TDocument>()
+                    PipelineStageDefinitionBuilder.Count<TDocument>()
                 }));
 
             var dataFacet = AggregateFacet.Create("data",
                 PipelineDefinition<TDocument, TDocument>.Create(new[]
                 {
-                PipelineStageDefinitionBuilder.Sort(sortDefinition),
-                PipelineStageDefinitionBuilder.Skip<TDocument>((page - 1) * pageSize),
-                PipelineStageDefinitionBuilder.Limit<TDocument>(pageSize),
+                    PipelineStageDefinitionBuilder.Sort(sortDefinition),
+                    PipelineStageDefinitionBuilder.Skip<TDocument>((page - 1) * pageSize),
+                    PipelineStageDefinitionBuilder.Limit<TDocument>(pageSize),
                 }));
 
 

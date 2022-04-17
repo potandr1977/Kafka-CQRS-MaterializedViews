@@ -54,7 +54,7 @@ namespace Business
             await _personDao.DeleteById(id);
         }
 
-        public Task<List<Person>> GetPage(int pageNo, int PageSize) => _personDao.GetPage(pageNo, PageSize);
+        public Task<(int totalPages, IReadOnlyList<Person> data)> GetPage(int pageNo, int PageSize) => _personDao.GetPage(pageNo, PageSize);
 
         public Task<Person> GetById(Guid id) => _personDao.GetById(id);
 

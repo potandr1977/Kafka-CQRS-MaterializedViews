@@ -9,7 +9,9 @@ namespace DataAccess.DataAccess
     {
         public Task Save(Person payment);
 
-        public Task<List<Person>> GetPage(int pageNo, int PageSize);
+        public Task<List<Person>> GetAll();
+
+        public Task<(int totalPages, IReadOnlyList<Person> data)> GetPage(int pageNo, int PageSize);
 
         public Task<Person> GetById(Guid id);
 

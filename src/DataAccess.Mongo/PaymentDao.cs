@@ -17,6 +17,10 @@ namespace DataAccess.Mongo
 
         private IMongoCollection<Payment> Payments => database.GetCollection<Payment>(MongoSettings.PaymentsCollectionName);
 
+        public Task<List<Payment>> GetAll() =>
+            Payments.Find(_ => true).ToListAsync();
+
+
         public Task Save(Payment payment) => Payments.ReplaceOneAsync(
             x => x.Id == payment.Id,
             payment,
@@ -25,20 +29,16 @@ namespace DataAccess.Mongo
                 IsUpsert = true 
             });
 
-        public async Task<List<Payment>> GetPage(int pageNo, int pageSize)
-        {
-            var (totalPages, data) = await Payments.AggregateByPage(
+        public Task<(int totalPages, IReadOnlyList<Payment> data)> GetPage(int pageNo, int pageSize) => Payments.AggregateByPage(
                 Builders<Payment>.Filter.Empty,
                 Builders<Payment>.Sort.Ascending(x => x.CreateDate),
                 page: pageNo,
                 pageSize: pageSize);
 
-            return data.ToList();
-        }
-
         public Task<Payment> GetById(Guid id) => Payments.Find(payment => payment.Id == id).FirstOrDefaultAsync();
 
-        public Task<List<Payment>> GetByAccountId(Guid accountId) => Payments.Find(payment => payment.AccountId == accountId).ToListAsync();
+        public Task<List<Payment>> GetByAccountId(Guid accountId) => 
+            Payments.Find(payment => payment.AccountId == accountId).ToListAsync();
 
         public Task DeleteById(Guid id) =>
             Payments.DeleteOneAsync(account => account.Id == id);

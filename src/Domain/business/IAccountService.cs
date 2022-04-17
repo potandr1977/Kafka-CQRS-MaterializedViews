@@ -9,7 +9,7 @@ namespace Domain.Services
     {
         public Task Save(Account account);
 
-        public Task<List<Account>> GetPage(int pageNo, int PageSize);
+        public Task<(int totalPages, IReadOnlyList<Account> data)> GetPage(int pageNo, int PageSize);
 
         public Task<Account> GetById(Guid id);
 

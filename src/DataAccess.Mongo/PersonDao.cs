@@ -18,6 +18,10 @@ namespace DataAccess.Mongo
 
         private IMongoCollection<Person> Persons => database.GetCollection<Person>(MongoSettings.PersonsCollectionName);
 
+        public Task<List<Person>> GetAll() =>
+            Persons.Find(_ => true).ToListAsync();
+
+
         public Task Save(Person person) => Persons.ReplaceOneAsync(
             x => x.Id == person.Id, 
             person, 
@@ -26,20 +30,14 @@ namespace DataAccess.Mongo
                 IsUpsert = true
             });
 
-        public async Task<List<Person>> GetPage(int pageNo, int pageSize)
-        {
-            var (totalPages, data) = await Persons.AggregateByPage(
+        public Task<(int totalPages, IReadOnlyList<Person> data)> GetPage(int pageNo, int pageSize) => Persons.AggregateByPage(
                 Builders<Person>.Filter.Empty,
                 Builders<Person>.Sort.Ascending(x => x.CreateDate),
                 page: pageNo,
                 pageSize: pageSize);
 
-            return data.ToList();
-        }
-
         public Task<Person> GetById(Guid id) => Persons.Find(person => person.Id == id).FirstOrDefaultAsync();
 
         public Task DeleteById(Guid id) => Persons.DeleteOneAsync(account => account.Id == id);
-    
     }
 }

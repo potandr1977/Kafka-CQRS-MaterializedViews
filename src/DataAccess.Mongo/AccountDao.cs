@@ -25,16 +25,14 @@ namespace DataAccess.Mongo
                 IsUpsert = true 
             });
 
-        public async Task<List<Account>> GetPage(int pageNo, int pageSize)
-        {
-            var (totalPages, data) = await Accounts.AggregateByPage(
+        public Task<List<Account>> GetAll() =>
+            Accounts.Find(_ => true).ToListAsync();
+
+        public Task<(int totalPages, IReadOnlyList<Account> data)> GetPage(int pageNo, int pageSize) => Accounts.AggregateByPage(
                 Builders<Account>.Filter.Empty,
                 Builders<Account>.Sort.Ascending(x => x.Name),
                 page: pageNo,
                 pageSize: pageSize);
-
-            return data.ToList();
-        }
 
         public Task<Account> GetById(Guid id) =>
             Accounts.Find(account => account.Id == id).FirstOrDefaultAsync();
