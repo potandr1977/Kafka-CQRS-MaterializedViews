@@ -11,6 +11,8 @@ namespace DataAccess.DataAccess
 
         public Task<List<Person>> GetAll();
 
+        public Task<(int totalPages, IReadOnlyList<Person> data)> GetPage(int pageNo, int PageSize);
+
         public Task<Person> GetById(Guid id);
 
         public Task DeleteById(Guid id);

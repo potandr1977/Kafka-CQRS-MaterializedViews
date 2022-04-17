@@ -10,6 +10,8 @@ namespace Domain.DataAccess
         public Task Save(Account author);
 
         public Task<List<Account>> GetAll();
+
+        public Task<(int totalPages, IReadOnlyList<Account> data)> GetPage(int page, int pageSize);
         
         public Task<Account> GetById(Guid id);
 

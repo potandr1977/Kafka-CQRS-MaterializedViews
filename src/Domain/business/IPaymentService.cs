@@ -9,10 +9,12 @@ namespace Domain.Services
     {
         public Task Save(Payment payment);
 
-        public Task<List<Payment>> GetAll();
+        public Task<(int totalPages, IReadOnlyList<Payment> data)> GetPage(int pageNo, int PageSize);
 
         public Task<Payment> GetById(Guid id);
 
         public Task DeleteById(Guid id);
+
+        public Task<List<Payment>> GetByAccountId(Guid accountId);
     }
 }

@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Settings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Mongo
@@ -16,19 +17,28 @@ namespace DataAccess.Mongo
 
         private IMongoCollection<Payment> Payments => database.GetCollection<Payment>(MongoSettings.PaymentsCollectionName);
 
-        public Task Save(Payment author) => Payments.InsertOneAsync(author);
+        public Task<List<Payment>> GetAll() =>
+            Payments.Find(_ => true).ToListAsync();
 
-        public Task<List<Payment>> GetAll()
-        {
-            var builder = new FilterDefinitionBuilder<Payment>();
-            var filter = builder.Empty;
 
-            return Payments.Find(filter).ToListAsync();
-        }
+        public Task Save(Payment payment) => Payments.ReplaceOneAsync(
+            x => x.Id == payment.Id,
+            payment,
+            new ReplaceOptions
+            { 
+                IsUpsert = true 
+            });
+
+        public Task<(int totalPages, IReadOnlyList<Payment> data)> GetPage(int pageNo, int pageSize) => Payments.AggregateByPage(
+                Builders<Payment>.Filter.Empty,
+                Builders<Payment>.Sort.Ascending(x => x.CreateDate),
+                page: pageNo,
+                pageSize: pageSize);
 
         public Task<Payment> GetById(Guid id) => Payments.Find(payment => payment.Id == id).FirstOrDefaultAsync();
 
-        public Task<List<Payment>> GetByAccountId(Guid accountId) => Payments.Find(payment => payment.AccountId == accountId).ToListAsync();
+        public Task<List<Payment>> GetByAccountId(Guid accountId) => 
+            Payments.Find(payment => payment.AccountId == accountId).ToListAsync();
 
         public Task DeleteById(Guid id) =>
             Payments.DeleteOneAsync(account => account.Id == id);

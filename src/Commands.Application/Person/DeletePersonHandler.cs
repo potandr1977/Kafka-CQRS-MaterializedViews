@@ -17,13 +17,8 @@ namespace Commands.Application.Commands
 
         public async Task<Unit> Handle(DeletePersonCommand request, CancellationToken cancellationToken)
         {
-            var person = new Person
-            {
-                Id = request.Id
-            };
-
-            await _personService.Save(person);
-
+            await _personService.DeleteById(request.Id);
+            
             return Unit.Value;
         }
     }

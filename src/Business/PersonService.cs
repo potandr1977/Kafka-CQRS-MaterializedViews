@@ -1,13 +1,12 @@
 ﻿using DataAccess.DataAccess;
 using Domain.Models;
 using Domain.Services;
+using EventBus.Kafka.Abstraction;
 using Messages;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Linq;
-using Domain.DataAccess;
-using EventBus.Kafka.Abstraction;
+using System.Threading.Tasks;
 
 namespace Business
 {
@@ -15,21 +14,38 @@ namespace Business
     {
         private readonly IPersonDao _personDao;
         private readonly IKafkaProducer<UpdatePersonProjectionMessage> _kafkaPersonProducer;
-        private readonly IAccountDao _accountDao;
+        private readonly IAccountService _accountService;
 
         public PersonService(
             IPersonDao personDao,
-            IAccountDao accountDao,
+            IAccountService accountService,
             IKafkaProducer<UpdatePersonProjectionMessage> kafkaPersonProducer)
         {
             _personDao = personDao;
-            _accountDao = accountDao;
+            _accountService = accountService;
             _kafkaPersonProducer = kafkaPersonProducer;
+        }
+
+        public async Task AddAccountToPerson(Guid personId, Account account)
+        {
+            if (account.PersonId != personId)
+            {
+                throw new InvalidOperationException($"Account {account.Id} belongs to other person");
+            }
+
+            var person = await _personDao.GetById(personId);
+
+            if (person.AccountIds.Any())
+            {
+                throw new InvalidOperationException($"Only one account per person allowed. PersonId {personId}, accoutnId {account.Id}");
+            }
+
+            await _accountService.Save(account);
         }
 
         public async Task DeleteById(Guid id)
         {
-            var accounts = await _accountDao.GetByPersonId(id);
+            var accounts = await _accountService.GetByPersonId(id);
             if (accounts.Any())
             {
                 return;
@@ -38,7 +54,7 @@ namespace Business
             await _personDao.DeleteById(id);
         }
 
-        public Task<List<Person>> GetAll() => _personDao.GetAll();
+        public Task<(int totalPages, IReadOnlyList<Person> data)> GetPage(int pageNo, int PageSize) => _personDao.GetPage(pageNo, PageSize);
 
         public Task<Person> GetById(Guid id) => _personDao.GetById(id);
 
@@ -46,7 +62,8 @@ namespace Business
         {
             await _personDao.Save(person);
 
-            await _kafkaPersonProducer.ProduceAsync(new UpdatePersonProjectionMessage
+            //We don't want wait delivery confirmation.
+            _kafkaPersonProducer.Produce(new UpdatePersonProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 PersonId = person.Id,

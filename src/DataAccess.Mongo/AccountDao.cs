@@ -4,6 +4,7 @@ using MongoDB.Driver;
 using Settings;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Mongo
@@ -15,16 +16,23 @@ namespace DataAccess.Mongo
         public AccountDao(IMongoClient mongoClient) => database = mongoClient.GetDatabase(MongoSettings.DbName);
 
         private IMongoCollection<Account> Accounts => database.GetCollection<Account>(MongoSettings.AccountsCollectionName);
+        
+        public Task Save(Account account) => Accounts.ReplaceOneAsync(
+            x => x.Id == account.Id,
+            account,
+            new ReplaceOptions
+            {
+                IsUpsert = true 
+            });
 
-        public Task Save(Account author) => Accounts.InsertOneAsync(author);
+        public Task<List<Account>> GetAll() =>
+            Accounts.Find(_ => true).ToListAsync();
 
-        public Task<List<Account>> GetAll()
-        {
-            var builder = new FilterDefinitionBuilder<Account>();
-            var filter = builder.Empty;
-
-            return Accounts.Find(filter).ToListAsync();
-        }
+        public Task<(int totalPages, IReadOnlyList<Account> data)> GetPage(int pageNo, int pageSize) => Accounts.AggregateByPage(
+                Builders<Account>.Filter.Empty,
+                Builders<Account>.Sort.Ascending(x => x.Name),
+                page: pageNo,
+                pageSize: pageSize);
 
         public Task<Account> GetById(Guid id) =>
             Accounts.Find(account => account.Id == id).FirstOrDefaultAsync();

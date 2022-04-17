@@ -30,6 +30,19 @@ namespace Commands.Api
         {
             var handlersAssembly = typeof(CreatePersonHandler).GetTypeInfo().Assembly;
             services.AddMediatR(Assembly.GetExecutingAssembly(), handlersAssembly);
+            /*
+            services.AddMediatR(typeof(Startup));
+            services.Scan(scan =>
+            {
+                scan
+                    .FromAssemblies(Assembly.Load($"{nameof(Application)}"))
+                    .AddClasses(classes => classes
+                        .AssignableTo(typeof(IPipelineBehavior<,>)))
+                    .AsImplementedInterfaces()
+                    .WithSingletonLifetime();
+
+            });
+            */
 
             services.AddSingleton<IMongoClient>(s =>
                 new MongoClient(MongoSettings.ConnectionString)
