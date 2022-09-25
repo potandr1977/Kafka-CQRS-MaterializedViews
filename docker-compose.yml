@@ -160,6 +160,16 @@ services:
       dockerfile: src/Projector.Elastic/Dockerfile
     networks:
       - mynetwork
+
+
+  exchangerateapi:
+    image: ${DOCKER_REGISTRY-}exchangerateapi
+    build:
+      context: .
+      dockerfile: src/ExchangeRateApi/Dockerfile
+    networks:
+      - mynetwork
+
 networks:
   mynetwork:
      driver: bridge
