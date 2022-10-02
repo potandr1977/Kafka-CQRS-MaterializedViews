@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Clients
 {
-    public class ExchangeRateClient : IExchangeRateClient
+    public class ExchangeRateService : IExchangeRateService
     {
         private readonly HttpClient _client;
         private readonly IAsyncPolicy<HttpResponseMessage> _retryPolicy;
 
-        public ExchangeRateClient(
+        public ExchangeRateService(
             HttpClient client,
             IReadOnlyPolicyRegistry<string> policyRegistry)
         {
@@ -23,7 +23,7 @@ namespace Infrastructure.Clients
 
         public async Task<int> GetAccessRateAsync()
         {
-            var response = await _retryPolicy.ExecuteAsync(() => _client.GetAsync("api/exchangerate"));
+            var response = await _retryPolicy.ExecuteAsync(() => _client.GetAsync("api/ExchangeRate"));
 
             var converted = await response.Content.ReadAsStringAsync();
             var rate = JsonSerializer.Deserialize<int>(converted);

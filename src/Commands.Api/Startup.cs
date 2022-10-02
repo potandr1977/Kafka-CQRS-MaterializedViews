@@ -46,6 +46,7 @@ namespace Commands.Api
             */
 
             services.AddClients();
+            services.AddRetryPolicy();
 
             services.AddSingleton<IMongoClient>(s =>
                 new MongoClient(MongoSettings.ConnectionString)

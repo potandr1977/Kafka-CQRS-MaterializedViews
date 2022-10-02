@@ -4,6 +4,7 @@ using Domain.Services;
 using EventBus.Kafka;
 using EventBus.Kafka.Abstraction;
 using EventBus.Kafka.Abstraction.Enums;
+using Infrastructure.Clients;
 using Messages;
 using System;
 using System.Collections.Generic;
@@ -15,13 +16,16 @@ namespace Business
     {
         private readonly IPaymentDao _paymentDao;
         private readonly IKafkaProducer<UpdatePaymentProjectionMessage> _kafkaPaymentProducer;
+        private readonly IExchangeRateService _exchangeRateService;
 
         public PaymentService(
             IPaymentDao paymentDao,
-            IKafkaProducer<UpdatePaymentProjectionMessage> kafkaPaymentProducer)
+            IKafkaProducer<UpdatePaymentProjectionMessage> kafkaPaymentProducer,
+            IExchangeRateService exchangeRateService)
         {
             _paymentDao = paymentDao;
             _kafkaPaymentProducer = kafkaPaymentProducer;
+            _exchangeRateService = exchangeRateService;
         }
 
         public Task DeleteById(Guid id) => _paymentDao.DeleteById(id);
@@ -40,15 +44,24 @@ namespace Business
 
         public async Task Save(Payment payment)
         {
-            await _paymentDao.Save(payment);
+            if (payment.AccountId == Guid.Empty)
+            { 
+                throw new ArgumentNullException(nameof(payment),"The account should not be null");
+            }
+
+            var rate = await _exchangeRateService.GetAccessRateAsync();
+
+            var paymentRated = payment with { Sum = payment.Sum * rate };
+
+            await _paymentDao.Save(paymentRated);
 
             await _kafkaPaymentProducer.ProduceAsync(new UpdatePaymentProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
-                PaymentId = payment.Id,
-                AccountId = payment.AccountId,
-                PersonType = (int) payment.PaymentType,
-                Sum = payment.Sum
+                PaymentId = paymentRated.Id,
+                AccountId = paymentRated.AccountId,
+                PersonType = (int) paymentRated.PaymentType,
+                Sum = paymentRated.Sum
             });
         }
     }
