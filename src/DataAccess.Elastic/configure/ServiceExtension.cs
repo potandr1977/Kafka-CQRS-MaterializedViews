@@ -7,9 +7,9 @@ namespace DataAccess.Elastic.Configure
     {
         public static IServiceCollection AddElasticDataAccessObjects(this IServiceCollection services)
         {
-            services.AddSingleton<IAccountSimpleViewDao, AccountSimpleViewDao>();
-            services.AddSingleton<IPaymentSimpleViewDao, PaymentSimpleViewDao>();
-            services.AddSingleton<IPersonSimpleViewDao, PersonSimpleViewDao>();
+            services.AddScoped<IAccountSimpleViewDao, AccountSimpleViewDao>();
+            services.AddScoped<IPaymentSimpleViewDao, PaymentSimpleViewDao>();
+            services.AddScoped<IPersonSimpleViewDao, PersonSimpleViewDao>();
 
             return services;
         }

@@ -2,6 +2,7 @@ using Business.Configuration;
 using Commands.Application.Commands;
 using DataAccess.Mongo.Configure;
 using EventBus.Kafka.Abstraction;
+using Infrastructure.Clients;
 using MediatR;
 using Messages;
 using Microsoft.AspNetCore.Builder;
@@ -44,7 +45,10 @@ namespace Commands.Api
             });
             */
 
-            services.AddSingleton<IMongoClient>(s =>
+            services.AddClients();
+            services.AddRetryPolicy();
+
+            services.AddScoped<IMongoClient>(s =>
                 new MongoClient(MongoSettings.ConnectionString)
             );
 

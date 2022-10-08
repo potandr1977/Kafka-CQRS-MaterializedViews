@@ -10,8 +10,7 @@ namespace EventBus.Kafka.Abstraction
             this IServiceCollection serviceCollection,
             string TopicName) where TMessage : UpdateProjectionMessage
         {
-            var producer = new KafkaProducer<TMessage>(TopicName);
-            serviceCollection.AddSingleton<IKafkaProducer<TMessage>>(producer);
+            serviceCollection.AddScoped<IKafkaProducer<TMessage>>(x => new KafkaProducer<TMessage>(TopicName));
 
             return serviceCollection;
         }
@@ -21,7 +20,7 @@ namespace EventBus.Kafka.Abstraction
             string TopicName,
             string GroupdId) where TMessage : UpdateProjectionMessage where TMessageHandler : class, IMessageHandler<TMessage>
         {
-            serviceCollection.AddSingleton<IMessageHandler<TMessage>, TMessageHandler>();
+            serviceCollection.AddScoped<IMessageHandler<TMessage>, TMessageHandler>();
 
             var consumer = new KafkaConsumer<string, TMessage>(
                 GroupdId,
@@ -33,7 +32,16 @@ namespace EventBus.Kafka.Abstraction
                     messageHandler.HandleAsync(value);
                 });
 
-            serviceCollection.AddSingleton<IKafkaConsumer<TMessage>>(consumer);
+            serviceCollection.AddScoped<IKafkaConsumer<TMessage>>(x =>
+               new KafkaConsumer<string, TMessage>(
+                GroupdId,
+                TopicName,
+                 (key, value) => {
+                     var messageHandler = serviceCollection.BuildServiceProvider().GetRequiredService<IMessageHandler<TMessage>>();
+
+                     //will be executed synchronously
+                     messageHandler.HandleAsync(value);
+                 }));
 
             return serviceCollection;
         }

@@ -28,11 +28,11 @@ namespace Projector.Elastic
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddSingleton<IMongoClient>(s =>
+                    services.AddScoped<IMongoClient>(s =>
                         new MongoClient(MongoSettings.ConnectionString)
                     );
 
-                    services.AddSingleton<IElasticClient>(s =>
+                    services.AddScoped<IElasticClient>(s =>
                     {
                         var settings =
                             new ConnectionSettings(new Uri(ElasticSettings.Url))
@@ -60,9 +60,9 @@ namespace Projector.Elastic
                     services.AddKafkaProducer<UpdatePaymentProjectionMessage>(KafkaSettings.ProjectionTopics.PaymentTopicName);
                     services.AddKafkaProducer<UpdatePersonProjectionMessage>(KafkaSettings.ProjectionTopics.PersonTopicName);
 
-                    services.AddSingleton<IAccountProjector, AccountProjector>();
-                    services.AddSingleton<IPaymentProjector, PaymentProjector>();
-                    services.AddSingleton<IPersonProjector, PersonProjector>();
+                    services.AddScoped<IAccountProjector, AccountProjector>();
+                    services.AddScoped<IPaymentProjector, PaymentProjector>();
+                    services.AddScoped<IPersonProjector, PersonProjector>();
 
                     services.AddMongoDataAccessObjects();
                     services.AddElasticDataAccessObjects();

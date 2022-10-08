@@ -7,9 +7,9 @@ namespace Business.Configuration
     {
         public static IServiceCollection AddDomainServices(this IServiceCollection services)
         {
-            services.AddSingleton<IAccountService, AccountService>();
-            services.AddSingleton<IPaymentService, PaymentService>();
-            services.AddSingleton<IPersonService, PersonService>();
+            services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IPersonService, PersonService>();
 
             return services;
         }

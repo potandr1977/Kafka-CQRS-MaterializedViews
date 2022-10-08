@@ -34,7 +34,7 @@ namespace Queries.Api
             var handlersAssembly = typeof(GetAllPersonHandler).GetTypeInfo().Assembly;
             services.AddMediatR(Assembly.GetExecutingAssembly(), handlersAssembly);
 
-            services.AddSingleton<IElasticClient>(s =>
+            services.AddScoped<IElasticClient>(s =>
             {
                 var settings =
                     new ConnectionSettings(new Uri(ElasticSettings.Url))
