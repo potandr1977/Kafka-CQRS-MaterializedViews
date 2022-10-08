@@ -34,7 +34,7 @@ namespace Infrastructure.Clients
             var policyRegistry = new PolicyRegistry();
             policyRegistry.Add(Constants.InfiniteRetryPolicy, retryPolicy);
 
-            return services.AddSingleton<IReadOnlyPolicyRegistry<string>>(s => policyRegistry);
+            return services.AddScoped<IReadOnlyPolicyRegistry<string>>(s => policyRegistry);
         }
     }
 }

@@ -48,7 +48,7 @@ namespace Commands.Api
             services.AddClients();
             services.AddRetryPolicy();
 
-            services.AddSingleton<IMongoClient>(s =>
+            services.AddScoped<IMongoClient>(s =>
                 new MongoClient(MongoSettings.ConnectionString)
             );
 

@@ -9,9 +9,9 @@ namespace DataAccess.Mongo.Configure
     {
         public static IServiceCollection AddMongoDataAccessObjects(this IServiceCollection services)
         {
-            services.AddSingleton<IAccountDao, AccountDao>();
-            services.AddSingleton<IPaymentDao, PaymentDao>();
-            services.AddSingleton<IPersonDao, PersonDao>();
+            services.AddScoped<IAccountDao, AccountDao>();
+            services.AddScoped<IPaymentDao, PaymentDao>();
+            services.AddScoped<IPersonDao, PersonDao>();
 
             return services;
         }
