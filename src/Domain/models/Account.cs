@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Domain.models;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Models
 {
-    public record Account
+    public record Account : OptimisticEntity
     {
-        public Guid Id { get; init; }
-
         public string Name { get; init; }
 
         public DateTime CreateDate { get; init; }

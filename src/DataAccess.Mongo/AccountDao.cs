@@ -16,14 +16,36 @@ namespace DataAccess.Mongo
         public AccountDao(IMongoClient mongoClient) => database = mongoClient.GetDatabase(MongoSettings.DbName);
 
         private IMongoCollection<Account> Accounts => database.GetCollection<Account>(MongoSettings.AccountsCollectionName);
-        
-        public Task Save(Account account) => Accounts.ReplaceOneAsync(
-            x => x.Id == account.Id,
-            account,
-            new ReplaceOptions
+
+        public async Task Save(Account account)
+        {
+            if (account.TimeStamp == null)
             {
-                IsUpsert = true 
-            });
+                await Accounts.ReplaceOneAsync(
+                x => x.Id == account.Id,
+                account,
+                new ReplaceOptions
+                {
+                    IsUpsert = true
+                });
+
+                return;
+            }
+
+            var result = await Accounts.ReplaceOneAsync(
+                x => x.Id == account.Id && x.TimeStamp == account.TimeStamp,
+                account,
+                new ReplaceOptions
+                {
+                    IsUpsert = true
+                });
+
+            if (result.ModifiedCount == 0)
+            {
+                throw new Exception("Ошибка! Попытка сохранить устаревшую версию данных.");
+            }
+
+        }
 
         public Task<List<Account>> GetAll() =>
             Accounts.Find(_ => true).ToListAsync();

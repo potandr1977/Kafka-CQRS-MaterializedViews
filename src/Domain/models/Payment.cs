@@ -1,12 +1,11 @@
 ﻿using Domain.Enums;
+using Domain.models;
 using System;
 
 namespace Domain.Models
 {
-    public record Payment
+    public record Payment : OptimisticEntity
     {
-        public Guid Id { get; init; }
-
         public Guid AccountId { get; init; }
 
         public decimal Sum { get; init; }
