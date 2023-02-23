@@ -21,9 +21,11 @@ namespace DataAccess.Mongo
         {
             if (account.TimeStamp == null)
             {
+                var stampedAccount = account with { TimeStamp = DateTime.UtcNow };
+
                 await Accounts.ReplaceOneAsync(
-                x => x.Id == account.Id,
-                account,
+                x => x.Id == stampedAccount.Id,
+                stampedAccount,
                 new ReplaceOptions
                 {
                     IsUpsert = true
@@ -33,12 +35,7 @@ namespace DataAccess.Mongo
             }
 
             var result = await Accounts.ReplaceOneAsync(
-                x => x.Id == account.Id && x.TimeStamp == account.TimeStamp,
-                account,
-                new ReplaceOptions
-                {
-                    IsUpsert = true
-                });
+                x => x.Id == account.Id && x.TimeStamp == account.TimeStamp,account);
 
             if (result.ModifiedCount == 0)
             {
