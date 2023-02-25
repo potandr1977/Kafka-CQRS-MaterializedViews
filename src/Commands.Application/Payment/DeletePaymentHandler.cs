@@ -10,10 +10,7 @@ namespace Commands.Application.Commands
     {
         private readonly IPaymentService _paymentService;
 
-        public DeletePaymentHandler(IPaymentService paymentService)
-        {
-            _paymentService = paymentService;
-        }
+        public DeletePaymentHandler(IPaymentService paymentService) => _paymentService = paymentService;
 
         public async Task<Unit> Handle(DeletePaymentCommand request, CancellationToken cancellationToken)
         {

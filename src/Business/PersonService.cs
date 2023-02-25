@@ -40,7 +40,7 @@ namespace Business
                 throw new InvalidOperationException($"Only one account per person allowed. PersonId {personId}, accoutnId {account.Id}");
             }
 
-            await _accountService.Save(account);
+            await _accountService.Create(account);
         }
 
         public async Task DeleteById(Guid id)
@@ -58,9 +58,9 @@ namespace Business
 
         public Task<Person> GetById(Guid id) => _personDao.GetById(id);
 
-        public async Task Save(Person person)
+        public async Task Create(Person person)
         {
-            await _personDao.Save(person);
+            await _personDao.CreateAsync(person);
 
             //We don't want wait delivery confirmation.
             _kafkaPersonProducer.Produce(new UpdatePersonProjectionMessage
@@ -68,7 +68,22 @@ namespace Business
                 Id = Guid.NewGuid().ToString(),
                 PersonId = person.Id,
                 Name = person.Name,
-                Inn = person.Inn
+                Inn = person.Inn,
+                TimeStamp = person.TimeStamp,
+            });
+        }
+        public async Task Update(Person person)
+        {
+            var stampedPerson = await _personDao.UpdateAsync(person);
+
+            //We don't want wait delivery confirmation.
+            _kafkaPersonProducer.Produce(new UpdatePersonProjectionMessage
+            {
+                Id = Guid.NewGuid().ToString(),
+                PersonId = stampedPerson.Id,
+                Name = stampedPerson.Name,
+                Inn = stampedPerson.Inn,
+                TimeStamp = stampedPerson.TimeStamp,
             });
         }
     }

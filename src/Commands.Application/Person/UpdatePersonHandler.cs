@@ -10,10 +10,7 @@ namespace Commands.Application.Commands
     {
         private readonly IPersonService _personService;
 
-        public UpdatePersonHandler(IPersonService paymentService)
-        {
-            _personService = paymentService;
-        }
+        public UpdatePersonHandler(IPersonService paymentService) => _personService = paymentService;
 
         public async Task<Unit> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
         {
@@ -21,10 +18,11 @@ namespace Commands.Application.Commands
             {
                 Id = request.Id,
                 Name = request.Name,
-                Inn = request.Inn
+                Inn = request.Inn,
+                TimeStamp= request.TimeStamp,
             };
 
-            await _personService.Save(person);
+            await _personService.Update(person);
 
             return Unit.Value;
         }

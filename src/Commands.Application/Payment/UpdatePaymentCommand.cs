@@ -14,5 +14,6 @@ namespace Commands.Application.Commands
 
         public PaymentTypeEnum PaymentType { get; init; }
 
+        public DateTime TimeStamp { get; init; }
     }
 }

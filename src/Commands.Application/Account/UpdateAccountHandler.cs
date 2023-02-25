@@ -1,7 +1,6 @@
 ﻿using Domain.Models;
 using Domain.Services;
 using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,10 +18,11 @@ namespace Commands.Application.Commands
             {
                 Id = request.Id,
                 Name = request.Name,
-                PersonId = request.PersonId
+                PersonId = request.PersonId,
+                TimeStamp = request.TimeStamp,
             };
 
-            await _accountService.Save(account);
+            await _accountService.Update(account);
 
             return Unit.Value;
         }

@@ -28,7 +28,7 @@ namespace Commands.Application.Commands
                 Sum = request.Sum
             };
 
-            await _paymentService.Save(payment);
+            await _paymentService.Create(payment);
 
             return newGuid;
         }

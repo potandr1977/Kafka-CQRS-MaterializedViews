@@ -33,7 +33,7 @@ namespace Business
                 throw new InvalidOperationException($"Payment {payment.Id} belongs to other account");
             }
 
-            return _paymentService.Save(payment);
+            return _paymentService.Create(payment);
         }
 
         public async Task DeleteById(Guid id)
@@ -53,16 +53,31 @@ namespace Business
 
         public Task<List<Account>> GetByPersonId(Guid personId) => _accountDao.GetByPersonId(personId);
 
-        public async Task Save(Account account)
+        public async Task Create(Account account)
         {
-            await _accountDao.Save(account);
+            await _accountDao.CreateAsync(account);
 
             await _kafkaAccountProducer.ProduceAsync(new UpdateAccountProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 AccountId = account.Id,
                 Name = account.Name,
-                PersonId = account.PersonId
+                PersonId = account.PersonId,
+                TimeStamp= account.CreateDate,
+            });
+        }
+
+        public async Task Update(Account account)
+        {
+            var stamped = await _accountDao.UpdateAsync(account);
+
+            await _kafkaAccountProducer.ProduceAsync(new UpdateAccountProjectionMessage
+            {
+                Id = Guid.NewGuid().ToString(),
+                AccountId = stamped.Id,
+                Name = stamped.Name,
+                PersonId = stamped.PersonId,
+                TimeStamp= stamped.TimeStamp,
             });
         }
     }

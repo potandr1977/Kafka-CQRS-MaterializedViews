@@ -7,8 +7,6 @@ namespace Domain.Services
 {
     public interface IAccountService
     {
-        public Task Save(Account account);
-
         public Task<(int totalPages, IReadOnlyList<Account> data)> GetPage(int pageNo, int PageSize);
 
         public Task<Account> GetById(Guid id);
@@ -18,5 +16,9 @@ namespace Domain.Services
         public Task DeleteById(Guid id);
 
         public Task AddPaymentToAccount(Guid accountId, Payment payment);
+
+        public Task Create(Account account);
+
+        public Task Update(Account account);
     }
 }

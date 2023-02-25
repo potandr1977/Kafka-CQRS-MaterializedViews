@@ -28,6 +28,7 @@ namespace Projector.Elastic.projections.Person
                 Id = message.PersonId,
                 Name = message.Name,
                 Inn = message.Inn,
+                TimeStamp = message.TimeStamp,
             };
             try
             {

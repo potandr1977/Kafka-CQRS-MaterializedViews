@@ -6,6 +6,6 @@ namespace Domain.models
     {
         public Guid Id { get; init; }
 
-        public DateTime? TimeStamp { get; init; }
+        public DateTime TimeStamp { get; init; } = DateTime.Now;
     }
 }
