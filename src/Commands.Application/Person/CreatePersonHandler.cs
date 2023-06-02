@@ -23,10 +23,10 @@ namespace Commands.Application.Commands
             {
                 Id = newGuid,
                 Name = request.Name,
-                Inn = request.Inn
+                Inn = request.Inn,
             };
 
-            await _personService.Save(person);
+            await _personService.Create(person);
 
             return newGuid;
         }

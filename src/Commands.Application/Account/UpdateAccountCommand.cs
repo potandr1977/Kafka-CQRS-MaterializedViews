@@ -10,5 +10,7 @@ namespace Commands.Application.Commands
         public string Name { get; set; }
 
         public Guid PersonId { get; set; }
+
+        public DateTime TimeStamp { get; init; }
     }
 }

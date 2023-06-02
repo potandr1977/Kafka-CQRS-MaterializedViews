@@ -11,5 +11,7 @@ namespace Queries.Core.models
         public Guid PersonId { get; init; }
 
         public string PersonName { get; init; }
+
+        public DateTime TimeStamp { get; init; }
     }
 }

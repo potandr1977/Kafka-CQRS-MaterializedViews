@@ -13,5 +13,7 @@ namespace Queries.Core.models
         public string Name { get; init; }
 
         public string Inn { get; init; }
+
+        public DateTime TimeStamp { get; init; }
     }
 }

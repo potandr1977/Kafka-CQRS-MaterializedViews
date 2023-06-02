@@ -1,12 +1,11 @@
-﻿using System;
+﻿using Domain.models;
+using System;
 using System.Collections.Generic;
 
 namespace Domain.Models
 {
-    public record Person
+    public record Person : OptimisticEntity
     {
-        public Guid Id { get; init; }
-
         public string Name { get; init; }
 
         public string Inn { get; init; }
@@ -14,7 +13,5 @@ namespace Domain.Models
         public DateTime CreateDate { get; init; }
 
         public List<Guid> AccountIds { get; init; }
-
-
     }
 }

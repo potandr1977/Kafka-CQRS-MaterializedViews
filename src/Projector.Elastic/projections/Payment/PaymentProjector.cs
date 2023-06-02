@@ -35,7 +35,8 @@ namespace Projector.Elastic.projections.Payment
                 AccountId = message.AccountId,
                 AccountName = accountMongo?.Name,
                 PaymentType = (Queries.Core.Enums.PaymentTypeEnum) message.PersonType,
-                Sum = message.Sum
+                Sum = message.Sum,
+                TimeStamp = message.TimeStamp,
             };
             try
             {

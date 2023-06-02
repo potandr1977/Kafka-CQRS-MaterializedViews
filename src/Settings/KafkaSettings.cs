@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Settings
+﻿namespace Settings
 {
     public static class KafkaSettings
     {

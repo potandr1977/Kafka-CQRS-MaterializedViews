@@ -1,6 +1,4 @@
-﻿using EventBus.Kafka;
-using EventBus.Kafka.Abstraction;
-using EventBus.Kafka.Abstraction.Enums;
+﻿using EventBus.Kafka.Abstraction;
 using Messages;
 using Queries.Core.dataaccess;
 using System;
@@ -28,6 +26,7 @@ namespace Projector.Elastic.projections.Person
                 Id = message.PersonId,
                 Name = message.Name,
                 Inn = message.Inn,
+                TimeStamp = message.TimeStamp,
             };
             try
             {

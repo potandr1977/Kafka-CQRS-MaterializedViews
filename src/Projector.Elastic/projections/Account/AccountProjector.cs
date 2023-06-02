@@ -33,7 +33,8 @@ namespace Projector.Elastic.projections.Account
                 Id = message.AccountId,
                 Name = message.Name,
                 PersonId = message.PersonId,
-                PersonName = personMongo?.Name
+                PersonName = personMongo?.Name,
+                TimeStamp= message.TimeStamp,
             };
             try
             {

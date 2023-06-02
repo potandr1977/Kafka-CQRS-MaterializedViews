@@ -23,7 +23,7 @@ namespace Commands.Application.Commands
                 PersonId = request.PersonId
             };
 
-            await _accountService.Save(account);
+            await _accountService.Create(account);
 
             return newGuid;
         }

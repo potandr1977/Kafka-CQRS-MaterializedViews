@@ -10,10 +10,7 @@ namespace Commands.Application.Commands
     {
         private readonly IPaymentService _paymentService;
 
-        public UpdatePaymentHandler(IPaymentService paymentService)
-        {
-            _paymentService = paymentService;
-        }
+        public UpdatePaymentHandler(IPaymentService paymentService) => _paymentService = paymentService;
 
         public async Task<Unit> Handle(UpdatePaymentCommand request, CancellationToken cancellationToken)
         {
@@ -22,10 +19,11 @@ namespace Commands.Application.Commands
                 Id = request.Id,
                 AccountId = request.AccountId,
                 PaymentType = request.PaymentType,
-                Sum = request.Sum
+                Sum = request.Sum,
+                TimeStamp = request.TimeStamp,
             };
 
-            await _paymentService.Save(payment);
+            await _paymentService.Update(payment);
 
             return Unit.Value;
         }

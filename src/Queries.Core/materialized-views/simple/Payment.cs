@@ -14,5 +14,7 @@ namespace Queries.Core.models
         public decimal Sum { get; init; }
 
         public PaymentTypeEnum PaymentType { get; init; }
+
+        public DateTime TimeStamp { get; init; }
     }
 }
