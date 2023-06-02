@@ -1,4 +1,5 @@
 ﻿using Domain.dataaccess;
+using Domain.exceptions;
 using Domain.models;
 using MongoDB.Driver;
 using Settings;
@@ -39,7 +40,7 @@ namespace DataAccess.Mongo
 
             if (result.ModifiedCount == 0)
             {
-                throw new Exception($"Ошибка! Попытка сохранить устаревшую версию данных {nameof(T)}.");
+                throw new ConcurentOldVersionUpdateException($"Ошибка! Попытка сохранить устаревшую версию данных {nameof(T)}.");
             }
 
             return stampedModel;

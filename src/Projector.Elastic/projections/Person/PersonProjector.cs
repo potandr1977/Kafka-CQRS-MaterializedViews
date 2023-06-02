@@ -1,6 +1,4 @@
-﻿using EventBus.Kafka;
-using EventBus.Kafka.Abstraction;
-using EventBus.Kafka.Abstraction.Enums;
+﻿using EventBus.Kafka.Abstraction;
 using Messages;
 using Queries.Core.dataaccess;
 using System;
