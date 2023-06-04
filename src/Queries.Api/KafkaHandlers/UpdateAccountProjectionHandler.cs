@@ -1,5 +1,5 @@
 ﻿using EventBus.Kafka.Abstraction.Abstraction;
-using Messages;
+using Messages.Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;

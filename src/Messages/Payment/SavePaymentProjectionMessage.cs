@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Messages
+namespace Messages.Payment
 {
-    public record UpdatePaymentProjectionMessage : UpdateProjectionMessage
+    public record SavePaymentProjectionMessage : ProjectionMessage
     {
         public Guid PaymentId { get; init; }
 

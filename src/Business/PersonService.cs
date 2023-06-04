@@ -2,7 +2,8 @@
 using Domain.Models;
 using Domain.Services;
 using EventBus.Kafka.Abstraction;
-using Messages;
+using Messages.Account;
+using Messages.Person;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,17 +14,23 @@ namespace Business
     public class PersonService : IPersonService
     {
         private readonly IPersonDao _personDao;
-        private readonly IKafkaProducer<UpdatePersonProjectionMessage> _kafkaPersonProducer;
         private readonly IAccountService _accountService;
+        private readonly IKafkaProducer<UpdatePersonProjectionMessage> _kafkaUpdatePersonProducer;
+        private readonly IKafkaProducer<SavePersonProjectionMessage> _kafkaSavePersonProducer;
+        private readonly IKafkaProducer<DeletePersonProjectionMessage> _kafkaDeletePersonProducer;
 
         public PersonService(
             IPersonDao personDao,
             IAccountService accountService,
-            IKafkaProducer<UpdatePersonProjectionMessage> kafkaPersonProducer)
+            IKafkaProducer<UpdatePersonProjectionMessage> kafkaUpdatePersonProducer,
+            IKafkaProducer<SavePersonProjectionMessage> kafkaSavePersonProducer,
+            IKafkaProducer<DeletePersonProjectionMessage> kafkaDeletePersonProducer)
         {
             _personDao = personDao;
             _accountService = accountService;
-            _kafkaPersonProducer = kafkaPersonProducer;
+            _kafkaUpdatePersonProducer = kafkaUpdatePersonProducer ?? throw new NullReferenceException(nameof(kafkaUpdatePersonProducer));
+            _kafkaSavePersonProducer = kafkaSavePersonProducer ?? throw new NullReferenceException(nameof(kafkaUpdatePersonProducer));
+            _kafkaDeletePersonProducer = kafkaDeletePersonProducer ?? throw new NullReferenceException(nameof(kafkaDeletePersonProducer));
         }
 
         public async Task AddAccountToPerson(Guid personId, Account account)
@@ -52,6 +59,11 @@ namespace Business
             }
 
             await _personDao.DeleteById(id);
+
+            await _kafkaDeletePersonProducer.ProduceAsync(new DeletePersonProjectionMessage
+            {
+                Id = id.ToString(),
+            });
         }
 
         public Task<(int totalPages, IReadOnlyList<Person> data)> GetPage(int pageNo, int PageSize) => _personDao.GetPage(pageNo, PageSize);
@@ -63,7 +75,7 @@ namespace Business
             await _personDao.CreateAsync(person);
 
             //We don't want wait delivery confirmation.
-            _kafkaPersonProducer.Produce(new UpdatePersonProjectionMessage
+            _kafkaSavePersonProducer.Produce(new SavePersonProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 PersonId = person.Id,
@@ -77,7 +89,7 @@ namespace Business
             var stampedPerson = await _personDao.UpdateAsync(person);
 
             //We don't want wait delivery confirmation.
-            _kafkaPersonProducer.Produce(new UpdatePersonProjectionMessage
+            _kafkaUpdatePersonProducer.Produce(new UpdatePersonProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 PersonId = stampedPerson.Id,

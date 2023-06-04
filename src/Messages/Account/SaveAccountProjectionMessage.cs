@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Messages
+namespace Messages.Account
 {
-    public record UpdateAccountProjectionMessage : UpdateProjectionMessage
+    public record SaveAccountProjectionMessage : ProjectionMessage
     {
         public Guid AccountId { get; init; }
 

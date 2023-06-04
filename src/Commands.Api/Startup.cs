@@ -4,7 +4,9 @@ using DataAccess.Mongo.Configure;
 using EventBus.Kafka.Abstraction;
 using Infrastructure.Clients;
 using MediatR;
-using Messages;
+using Messages.Account;
+using Messages.Payment;
+using Messages.Person;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -52,9 +54,17 @@ namespace Commands.Api
                 new MongoClient(MongoSettings.ConnectionString)
             );
 
-            services.AddKafkaProducer<UpdateAccountProjectionMessage>(KafkaSettings.CommandTopics.AccountTopicName);
-            services.AddKafkaProducer<UpdatePaymentProjectionMessage>(KafkaSettings.CommandTopics.PaymentTopicName);
-            services.AddKafkaProducer<UpdatePersonProjectionMessage>(KafkaSettings.CommandTopics.PersonTopicName);
+            services.AddKafkaProducer<UpdateAccountProjectionMessage>(KafkaSettings.CommandTopics.UpdateAccountTopicName);
+            services.AddKafkaProducer<SaveAccountProjectionMessage>(KafkaSettings.CommandTopics.SaveAccountTopicName);
+            services.AddKafkaProducer<DeleteAccountProjectionMessage>(KafkaSettings.CommandTopics.DeleteAccountTopicName);
+
+            services.AddKafkaProducer<UpdatePaymentProjectionMessage>(KafkaSettings.CommandTopics.UpdatePaymentTopicName);
+            services.AddKafkaProducer<SavePaymentProjectionMessage>(KafkaSettings.CommandTopics.SavePaymentTopicName);
+            services.AddKafkaProducer<DeletePaymentProjectionMessage>(KafkaSettings.CommandTopics.DeletePaymentTopicName);
+
+            services.AddKafkaProducer<UpdatePersonProjectionMessage>(KafkaSettings.CommandTopics.UpdatePersonTopicName);
+            services.AddKafkaProducer<SavePersonProjectionMessage>(KafkaSettings.CommandTopics.SavePersonTopicName);
+            services.AddKafkaProducer<DeletePersonProjectionMessage>(KafkaSettings.CommandTopics.DeletePersonTopicName);
 
             services.AddMongoDataAccessObjects();
             services.AddDomainServices();

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace EventBus.Kafka.Abstraction
 {
-    public class KafkaProducer<TMessage> : IDisposable, IKafkaProducer<TMessage> where TMessage : UpdateProjectionMessage
+    public class KafkaProducer<TMessage> : IDisposable, IKafkaProducer<TMessage> where TMessage : ProjectionMessage
     {
         private readonly IProducer<string, TMessage> _producer;
         private string _topicName;

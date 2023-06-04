@@ -1,5 +1,7 @@
 using EventBus.Kafka.Abstraction;
-using Messages;
+using Messages.Account;
+using Messages.Payment;
+using Messages.Person;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading;

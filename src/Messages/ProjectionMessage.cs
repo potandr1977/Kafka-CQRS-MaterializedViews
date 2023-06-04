@@ -3,7 +3,7 @@ using System;
 
 namespace Messages
 {
-    public record UpdateProjectionMessage
+    public record ProjectionMessage
     {
         public string Id { get; set; }
 

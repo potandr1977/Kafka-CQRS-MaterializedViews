@@ -1,7 +1,9 @@
 using DataAccess.Elastic.Configure;
 using EventBus.Kafka.Abstraction;
 using MediatR;
-using Messages;
+using Messages.Account;
+using Messages.Payment;
+using Messages.Person;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -21,6 +23,8 @@ namespace Queries.Api
 {
     public class Startup
     {
+        private const string AllowedSpecificOrigins = "_AllowedSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,6 +37,7 @@ namespace Queries.Api
         {
             var handlersAssembly = typeof(GetAllPersonHandler).GetTypeInfo().Assembly;
             services.AddMediatR(Assembly.GetExecutingAssembly(), handlersAssembly);
+            
 
             services.AddScoped<IElasticClient>(s =>
             {
@@ -47,18 +52,28 @@ namespace Queries.Api
             });
 
             services.AddKafkaConsumer<UpdateAccountProjectionMessage, UpdateAccountProjectionHandler>(
-                KafkaSettings.ProjectionTopics.AccountTopicName,
+                KafkaSettings.ProjectionTopics.UpdateAccountTopicName,
                 KafkaSettings.Groups.BusinessGroupId);
 
             services.AddKafkaConsumer<UpdatePaymentProjectionMessage, UpdatePaymentProjectionHandler>(
-                KafkaSettings.ProjectionTopics.PaymentTopicName,
+                KafkaSettings.ProjectionTopics.UpdatePaymentTopicName,
                 KafkaSettings.Groups.BusinessGroupId);
 
             services.AddKafkaConsumer<UpdatePersonProjectionMessage, UpdatePersonProjectionHandler>(
-                KafkaSettings.ProjectionTopics.PersonTopicName,
+                KafkaSettings.ProjectionTopics.UpdatePersonTopicName,
                 KafkaSettings.Groups.BusinessGroupId);
 
             services.AddElasticDataAccessObjects();
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: AllowedSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:3009");//Accounting-ui
+                                  });
+            });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -94,6 +109,8 @@ namespace Queries.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(AllowedSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {

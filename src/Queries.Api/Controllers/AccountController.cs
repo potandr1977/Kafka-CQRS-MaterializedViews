@@ -36,11 +36,10 @@ namespace Queries.Api.Controllers
 
         // GET api/<PersonController>/5
         [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
+        public Task<Account> Get(Guid id) =>
+            _mediator.Send(new GetAccountQuery() { Id = id });
 
+        // update counter 
         [HttpGet]
         [Route("GetLastUpdate")]
         public string GetLastUpdate() => _configuration["LastUpdate"];

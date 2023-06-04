@@ -1,8 +1,5 @@
 ﻿using Queries.Core.models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Queries.Core.dataaccess
@@ -12,5 +9,9 @@ namespace Queries.Core.dataaccess
         Task<IReadOnlyCollection<Payment>> GetAll();
 
         Task Save(Payment payment);
+
+        Task Update(Payment payment);
+
+        Task Delete(string Id);
     }
 }

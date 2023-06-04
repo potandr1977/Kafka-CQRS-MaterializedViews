@@ -2,7 +2,9 @@
 using Queries.Core.dataaccess;
 using Queries.Core.models;
 using Settings;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace DataAccess.Elastic
@@ -27,7 +29,39 @@ namespace DataAccess.Elastic
             return resp.Documents;
         }
 
+        public async Task<Payment> GetById(Guid Id)
+        {
+            var resp = await elasticClient.SearchAsync<Payment>(
+                x => x
+                .Index(ElasticSettings.PaymentsIndexName)
+                .Query(
+                    q1 => q1.Bool(
+                            b => b.Must(
+                                m => m.Terms(
+                                    t => t.Field(f => f.Id)
+                    .Terms(Id))))));
+
+            return resp.Documents.FirstOrDefault();
+        }
+
+        /// <summary>
+        /// Вызывается только из проектора. Can be invoked from projector only.
+        /// </summary>
+        /// <param name="person"></param>
+        /// <returns></returns>
         public Task Save(Payment payment) =>
-            elasticClient.IndexDocumentAsync(payment);
+                    elasticClient.IndexDocumentAsync(payment);
+
+
+        public Task Update(Payment payment) => elasticClient.UpdateAsync<Payment>(
+               payment.Id,
+               u => u
+                 .Index(ElasticSettings.PaymentsIndexName)
+                 .Doc(payment));
+
+        public Task Delete(string Id) => elasticClient.DeleteByQueryAsync<Payment>(q => q
+                                                   .Index(ElasticSettings.PaymentsIndexName)
+                                                   .Query(rq => rq
+                                                       .Term(f => f.Id, Id)));
     }
 }
