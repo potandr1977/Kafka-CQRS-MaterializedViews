@@ -7,8 +7,8 @@
         public static class CommandTopics
         {
             public static string UpdateAccountTopicName = "update-account-topic";
-            public static string SaveAccountTopicName = "update-account-topic";
-            public static string DeleteAccountTopicName = "update-account-topic";
+            public static string SaveAccountTopicName = "save-account-topic";
+            public static string DeleteAccountTopicName = "delete-account-topic";
 
             public static string UpdatePaymentTopicName = "update-payment-topic";
             public static string SavePaymentTopicName = "save-payment-topic";
