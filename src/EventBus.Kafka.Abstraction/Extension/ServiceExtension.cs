@@ -20,7 +20,7 @@ namespace EventBus.Kafka.Abstraction
             string TopicName,
             string GroupdId) where TMessage : ProjectionMessage where TMessageHandler : class, IMessageHandler<TMessage>
         {
-            serviceCollection.AddScoped<IMessageHandler<TMessage>, TMessageHandler>();
+            serviceCollection.AddSingleton<IMessageHandler<TMessage>, TMessageHandler>();
 
             var consumer = new KafkaConsumer<string, TMessage>(
                 GroupdId,
@@ -32,7 +32,7 @@ namespace EventBus.Kafka.Abstraction
                     messageHandler.HandleAsync(value);
                 });
 
-            serviceCollection.AddScoped<IKafkaConsumer<TMessage>>(x =>
+            serviceCollection.AddSingleton<IKafkaConsumer<TMessage>>(x =>
                new KafkaConsumer<string, TMessage>(
                 GroupdId,
                 TopicName,

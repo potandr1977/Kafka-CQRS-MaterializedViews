@@ -1,6 +1,5 @@
 using DataAccess.Elastic.Configure;
 using DataAccess.Mongo.Configure;
-using EventBus.Kafka;
 using EventBus.Kafka.Abstraction;
 using Messages.Account;
 using Messages.Payment;

@@ -21,6 +21,8 @@ namespace Commands.Api
 {
     public class Startup
     {
+        private const string AllowedSpecificOrigins = "_AllowedSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -69,6 +71,15 @@ namespace Commands.Api
             services.AddMongoDataAccessObjects();
             services.AddDomainServices();
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: AllowedSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:3009");//Accounting-ui
+                                  });
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -91,6 +102,8 @@ namespace Commands.Api
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(AllowedSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,0 +1,18 @@
+﻿using EventBus.Kafka.Abstraction.Abstraction;
+using Messages.Person;
+using System;
+using System.Threading.Tasks;
+
+namespace Queries.Api.KafkaHandlers.Person
+{
+    public class SavePersonProjectionHandler : IMessageHandler<SavePersonProjectionMessage>
+    {
+        public Task HandleAsync(SavePersonProjectionMessage message)
+        {
+            Console.WriteLine("Save Payment projection changed AccountId:{value.Id}");
+
+            return Task.CompletedTask;
+        }
+    }
+
+}
