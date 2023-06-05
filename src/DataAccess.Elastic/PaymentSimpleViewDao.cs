@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using Elasticsearch.Net;
+using Nest;
 using Queries.Core.dataaccess;
 using Queries.Core.models;
 using Settings;
@@ -52,12 +53,24 @@ namespace DataAccess.Elastic
         public Task Save(Payment payment) =>
                     elasticClient.IndexDocumentAsync(payment);
 
-
-        public Task Update(Payment payment) => elasticClient.UpdateAsync<Payment>(
-               payment.Id,
-               u => u
-                 .Index(ElasticSettings.PaymentsIndexName)
-                 .Doc(payment));
+        public Task Update(Payment payment) => elasticClient.UpdateByQueryAsync<Payment>(q =>
+                q.Query(q1 =>
+                   q1.Bool(b => b.Must(m =>
+                       m.Match(x => x.Field(f =>
+                        f.Id == payment.Id)))))
+                   .Script(s =>
+                        s.Source(
+                            @"ctx._source.accountName = params.accountName;
+                            ctx._source.sum = params.sum;
+                            ctx._source.paymentType = params.paymentType;
+                            ctx._source.timeStamp = params.timeStamp;")
+                        .Lang("painless")
+                        .Params(p => p
+                             .Add("accountName", payment.AccountName)
+                             .Add("sum", payment.Sum)
+                             .Add("paymentType", payment.PaymentType)
+                             .Add("timeStamp", payment.TimeStamp)
+                )).Conflicts(Conflicts.Proceed));
 
         public Task Delete(string Id) => elasticClient.DeleteByQueryAsync<Payment>(q => q
                                                    .Index(ElasticSettings.PaymentsIndexName)

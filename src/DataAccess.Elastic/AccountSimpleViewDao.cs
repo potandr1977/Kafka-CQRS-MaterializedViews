@@ -1,4 +1,5 @@
-﻿using Nest;
+﻿using Elasticsearch.Net;
+using Nest;
 using Queries.Core.dataaccess;
 using Queries.Core.models;
 using Settings;
@@ -52,11 +53,22 @@ namespace DataAccess.Elastic
         public Task Save(Account account) =>
             elasticClient.IndexDocumentAsync(account);
 
-        public Task Update(Account account) => elasticClient.UpdateAsync<Account>(
-                account.Id,
-                u => u
-                  .Index(ElasticSettings.AccountsIndexName)
-                  .Doc(account));
+        public Task Update(Account account) => elasticClient.UpdateByQueryAsync<Account>(q =>
+                q.Query(q1 =>
+                   q1.Bool(b => b.Must(m =>
+                       m.Match(x => x.Field(f =>
+                        f.Id == account.Id)))))
+                   .Script(s =>
+                        s.Source(
+                            @"ctx._source.name = params.name;
+                            ctx._source.personName = params.personName;
+                            ctx._source.timeStamp = params.timeStamp;")
+                        .Lang("painless")
+                        .Params(p => p
+                            .Add("name", account.Name)
+                            .Add("personName", account.PersonName)
+                            .Add("timeStamp", account.TimeStamp)
+                )).Conflicts(Conflicts.Proceed));
 
         public Task Delete(string Id) => elasticClient.DeleteByQueryAsync<Account>(q => q
                                                    .Index(ElasticSettings.AccountsIndexName)

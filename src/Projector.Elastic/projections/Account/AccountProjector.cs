@@ -36,7 +36,6 @@ namespace Projector.Elastic.projections.Account
             {
                 Id = message.AccountId,
                 Name = message.Name,
-                PersonId = message.PersonId,
                 PersonName = personMongo?.Name,
                 TimeStamp= message.TimeStamp,
             };
@@ -60,7 +59,6 @@ namespace Projector.Elastic.projections.Account
             {
                 Id = message.AccountId,
                 Name = message.Name,
-                PersonId = message.PersonId,
                 PersonName = personMongo?.Name,
                 TimeStamp = message.TimeStamp,
             };

@@ -10,6 +10,6 @@ namespace Messages.Payment
 
         public decimal Sum { get; init; }
 
-        public int PersonType { get; init; }
+        public int PaymentType { get; init; }
     }
 }

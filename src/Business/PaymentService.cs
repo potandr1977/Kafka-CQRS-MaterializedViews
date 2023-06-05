@@ -68,7 +68,7 @@ namespace Business
                 Id = Guid.NewGuid().ToString(),
                 PaymentId = paymentRated.Id,
                 AccountId = paymentRated.AccountId,
-                PersonType = (int) paymentRated.PaymentType,
+                PaymentType = (int) paymentRated.PaymentType,
                 Sum = paymentRated.Sum,
                 TimeStamp = paymentRated.TimeStamp,
             });
@@ -94,7 +94,7 @@ namespace Business
                 Id = Guid.NewGuid().ToString(),
                 PaymentId = stamped.Id,
                 AccountId = stamped.AccountId,
-                PersonType = (int)stamped.PaymentType,
+                PaymentType = (int)stamped.PaymentType,
                 Sum = stamped.Sum,
                 TimeStamp = stamped.TimeStamp,
             });

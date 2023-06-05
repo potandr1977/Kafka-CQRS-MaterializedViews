@@ -57,18 +57,20 @@ namespace DataAccess.Elastic
         public Task Update(Person person) =>
             elasticClient.UpdateByQueryAsync<Person>(q =>
                 q.Query(q1 =>
-                   q1.Bool(b => b.Must(m =>
-                       m.Match(x => x.Field(f =>
+                   q1.Bool(b => b.Must(m =>m
+                    .Match(x => x
+                       .Field(f =>
                         f.Id == person.Id)))))
-                   .Script(s =>
-                        s.Source(
+                    .Script(s => s
+                        .Source(
                             @"ctx._source.name = params.name;
                             ctx._source.inn = params.inn;
                             ctx._source.timeStamp = params.timeStamp;")
                         .Lang("painless")
-                        .Params(p => p.Add("name", person.Name)
-                        .Add("inn", person.Inn)
-                        .Add("timeStamp", person.TimeStamp)
+                        .Params(p => p
+                            .Add("name", person.Name)
+                            .Add("inn", person.Inn)
+                            .Add("timeStamp", person.TimeStamp)
                 )).Conflicts(Conflicts.Proceed));
 
 

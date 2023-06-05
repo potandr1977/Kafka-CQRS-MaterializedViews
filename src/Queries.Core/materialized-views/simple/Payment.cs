@@ -7,13 +7,11 @@ namespace Queries.Core.models
     {
         public Guid Id { get; init; }
 
-        public Guid AccountId { get; init; }
-
         public string AccountName { get; init; }
 
         public decimal Sum { get; init; }
 
-        public PaymentTypeEnum PaymentType { get; init; }
+        public string PaymentType { get; init; }
 
         public long TimeStamp { get; init; }
     }

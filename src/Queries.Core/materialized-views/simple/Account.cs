@@ -8,8 +8,6 @@ namespace Queries.Core.models
 
         public string Name { get; init; }
 
-        public Guid PersonId { get; init; }
-
         public string PersonName { get; init; }
 
         public long TimeStamp { get; init; }
