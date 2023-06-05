@@ -15,6 +15,6 @@ namespace Queries.Core.models
 
         public PaymentTypeEnum PaymentType { get; init; }
 
-        public DateTime TimeStamp { get; init; }
+        public long TimeStamp { get; init; }
     }
 }

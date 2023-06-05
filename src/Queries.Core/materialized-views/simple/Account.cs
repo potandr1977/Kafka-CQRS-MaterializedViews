@@ -12,6 +12,6 @@ namespace Queries.Core.models
 
         public string PersonName { get; init; }
 
-        public DateTime TimeStamp { get; init; }
+        public long TimeStamp { get; init; }
     }
 }

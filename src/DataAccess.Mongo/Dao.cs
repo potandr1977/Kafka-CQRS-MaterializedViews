@@ -33,7 +33,9 @@ namespace DataAccess.Mongo
 
         public async Task<T> UpdateAsync(T model)
         {
-            var stampedModel = model with { TimeStamp = DateTime.UtcNow };
+            var all = await GetAll();
+
+            var stampedModel = model with { TimeStamp = DateTime.Now.Ticks };
 
             var result = await Collection.ReplaceOneAsync(
                 x => x.Id == model.Id && x.TimeStamp == model.TimeStamp, stampedModel);

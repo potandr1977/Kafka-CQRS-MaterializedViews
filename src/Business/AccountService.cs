@@ -74,7 +74,7 @@ namespace Business
                 AccountId = account.Id,
                 Name = account.Name,
                 PersonId = account.PersonId,
-                TimeStamp= account.CreateDate,
+                TimeStamp= account.TimeStamp,
             });
         }
 

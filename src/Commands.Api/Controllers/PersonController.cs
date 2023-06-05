@@ -27,6 +27,13 @@ namespace Commands.Api.Controllers
         public Task Put([FromBody] UpdatePersonCommand request) =>
             _mediator.Send(request);
 
+        /*
+        [HttpPut("{id}")]
+        public void Put(int id, [FromBody] string value)
+        {
+        }
+        */
+
         // DELETE api/<PersonController>/5
         [HttpDelete]
         public Task Delete([FromBody] DeletePersonCommand request) =>

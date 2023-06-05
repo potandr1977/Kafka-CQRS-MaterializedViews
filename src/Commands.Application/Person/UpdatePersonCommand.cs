@@ -11,6 +11,6 @@ namespace Commands.Application.Commands
 
         public string Inn { get; set; }
 
-        public DateTime TimeStamp { get; init; }
+        public long TimeStamp { get; init; }
     }
 }

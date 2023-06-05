@@ -14,6 +14,6 @@ namespace Queries.Core.models
 
         public string Inn { get; init; }
 
-        public DateTime TimeStamp { get; init; }
+        public long TimeStamp { get; init; }
     }
 }
