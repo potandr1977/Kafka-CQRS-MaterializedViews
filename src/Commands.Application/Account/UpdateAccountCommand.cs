@@ -11,6 +11,6 @@ namespace Commands.Application.Commands
 
         public Guid PersonId { get; set; }
 
-        public DateTime TimeStamp { get; init; }
+        public long TimeStamp { get; init; }
     }
 }

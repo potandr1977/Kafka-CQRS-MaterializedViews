@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace Messages
+namespace Messages.Payment
 {
-    public record UpdatePaymentProjectionMessage : UpdateProjectionMessage
+    public record UpdatePaymentProjectionMessage : ProjectionMessage
     {
         public Guid PaymentId { get; init; }
 
@@ -10,6 +10,6 @@ namespace Messages
 
         public decimal Sum { get; init; }
 
-        public int PersonType { get; init; }
+        public int PaymentType { get; init; }
     }
 }

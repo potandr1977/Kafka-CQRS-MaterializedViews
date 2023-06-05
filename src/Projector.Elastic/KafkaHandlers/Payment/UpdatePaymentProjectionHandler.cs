@@ -1,13 +1,11 @@
 ﻿using EventBus.Kafka.Abstraction.Abstraction;
-using Messages;
+using Messages.Payment;
 using Projector.Elastic.projections.Payment;
-using Projector.Elastic.projections.Person;
-using System;
 using System.Threading.Tasks;
 
-namespace Projector.Elastic.KafkaHandlers
+namespace SimpleViewProjector.Elastic.KafkaHandlers.Payment
 {
-    public class UpdatePaymentProjectionHandler: IMessageHandler<UpdatePaymentProjectionMessage>
+    public class UpdatePaymentProjectionHandler : IMessageHandler<UpdatePaymentProjectionMessage>
     {
         private readonly IPaymentProjector _paymentProjector;
 

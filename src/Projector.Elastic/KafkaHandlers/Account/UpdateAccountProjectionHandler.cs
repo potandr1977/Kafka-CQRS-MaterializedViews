@@ -1,9 +1,9 @@
 ﻿using EventBus.Kafka.Abstraction.Abstraction;
-using Messages;
+using Messages.Account;
 using Projector.Elastic.projections.Account;
 using System.Threading.Tasks;
 
-namespace Projector.Elastic.KafkaHandlers
+namespace SimpleViewProjector.Elastic.KafkaHandlers.Account
 {
     public class UpdateAccountProjectionHandler : IMessageHandler<UpdateAccountProjectionMessage>
     {

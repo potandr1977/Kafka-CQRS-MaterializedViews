@@ -1,11 +1,11 @@
 ﻿using EventBus.Kafka.Abstraction.Abstraction;
-using Messages;
+using Messages.Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Queries.Api.KafkaHandlers
+namespace Queries.Api.KafkaHandlers.Account
 {
     public class UpdateAccountProjectionHandler : IMessageHandler<UpdateAccountProjectionMessage>
     {

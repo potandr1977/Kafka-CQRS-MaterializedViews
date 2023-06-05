@@ -3,7 +3,8 @@ using Domain.Models;
 using Domain.Services;
 using EventBus.Kafka.Abstraction;
 using Infrastructure.Clients;
-using Messages;
+using Messages.Account;
+using Messages.Payment;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -13,20 +14,35 @@ namespace Business
     public class PaymentService : IPaymentService
     {
         private readonly IPaymentDao _paymentDao;
-        private readonly IKafkaProducer<UpdatePaymentProjectionMessage> _kafkaPaymentProducer;
         private readonly IExchangeRateService _exchangeRateService;
+        private readonly IKafkaProducer<UpdatePaymentProjectionMessage> _kafkaUpdatePaymentProducer;
+        private readonly IKafkaProducer<SavePaymentProjectionMessage> _kafkaSavePaymentProducer;
+        private readonly IKafkaProducer<DeletePaymentProjectionMessage> _kafkaDeletePaymentProducer;
+
 
         public PaymentService(
             IPaymentDao paymentDao,
-            IKafkaProducer<UpdatePaymentProjectionMessage> kafkaPaymentProducer,
-            IExchangeRateService exchangeRateService)
+            IExchangeRateService exchangeRateService,
+            IKafkaProducer<UpdatePaymentProjectionMessage> kafkaUpdatePaymentProducer,
+            IKafkaProducer<SavePaymentProjectionMessage> kafkaSavePaymentProducer,
+            IKafkaProducer<DeletePaymentProjectionMessage> kafkaDeletePaymentProducer)
         {
             _paymentDao = paymentDao;
-            _kafkaPaymentProducer = kafkaPaymentProducer;
             _exchangeRateService = exchangeRateService;
+            _kafkaUpdatePaymentProducer = kafkaUpdatePaymentProducer ?? throw new NullReferenceException(nameof(kafkaUpdatePaymentProducer));
+            _kafkaSavePaymentProducer = kafkaSavePaymentProducer ?? throw new NullReferenceException(nameof(kafkaUpdatePaymentProducer));
+            _kafkaDeletePaymentProducer = kafkaDeletePaymentProducer ?? throw new NullReferenceException(nameof(kafkaDeletePaymentProducer));
         }
 
-        public Task DeleteById(Guid id) => _paymentDao.DeleteById(id);
+        public async Task DeleteById(Guid id)
+        {
+            await _paymentDao.DeleteById(id);
+
+            await _kafkaDeletePaymentProducer.ProduceAsync(new DeletePaymentProjectionMessage
+            {
+                Id = id.ToString(),
+            });
+        }
 
         public Task<(int totalPages, IReadOnlyList<Payment> data)> GetPage(int pageNo, int PageSize) => _paymentDao.GetPage(pageNo, PageSize);
 
@@ -47,12 +63,12 @@ namespace Business
 
             var updateTask = _paymentDao.CreateAsync(paymentRated);
 
-            var notifyTask = _kafkaPaymentProducer.ProduceAsync(new UpdatePaymentProjectionMessage
+            var notifyTask = _kafkaSavePaymentProducer.ProduceAsync(new SavePaymentProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 PaymentId = paymentRated.Id,
                 AccountId = paymentRated.AccountId,
-                PersonType = (int) paymentRated.PaymentType,
+                PaymentType = (int) paymentRated.PaymentType,
                 Sum = paymentRated.Sum,
                 TimeStamp = paymentRated.TimeStamp,
             });
@@ -73,12 +89,12 @@ namespace Business
 
             var stamped =  await _paymentDao.UpdateAsync(paymentRated);
 
-            await _kafkaPaymentProducer.ProduceAsync(new UpdatePaymentProjectionMessage
+            await _kafkaUpdatePaymentProducer.ProduceAsync(new UpdatePaymentProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 PaymentId = stamped.Id,
                 AccountId = stamped.AccountId,
-                PersonType = (int)stamped.PaymentType,
+                PaymentType = (int)stamped.PaymentType,
                 Sum = stamped.Sum,
                 TimeStamp = stamped.TimeStamp,
             });

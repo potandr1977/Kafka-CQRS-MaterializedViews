@@ -1,4 +1,4 @@
-﻿using Messages;
+﻿using Messages.Person;
 using System.Threading.Tasks;
 
 namespace Projector.Elastic.projections.Person
@@ -6,5 +6,9 @@ namespace Projector.Elastic.projections.Person
     public interface IPersonProjector
     {
         Task ProjectOne(UpdatePersonProjectionMessage message);
+
+        Task ProjectOne(SavePersonProjectionMessage message);
+
+        Task ProjectOne(DeletePersonProjectionMessage message);
     }
 }

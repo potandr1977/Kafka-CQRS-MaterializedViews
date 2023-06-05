@@ -1,7 +1,9 @@
 using DataAccess.Elastic.Configure;
 using EventBus.Kafka.Abstraction;
 using MediatR;
-using Messages;
+using Messages.Account;
+using Messages.Payment;
+using Messages.Person;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -10,6 +12,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Nest;
 using Queries.Api.KafkaHandlers;
+using Queries.Api.KafkaHandlers.Account;
+using Queries.Api.KafkaHandlers.Payment;
+using Queries.Api.KafkaHandlers.Person;
 using Queries.Application.Persons;
 using Queries.Core.models;
 using Settings;
@@ -21,6 +26,8 @@ namespace Queries.Api
 {
     public class Startup
     {
+        private const string AllowedSpecificOrigins = "_AllowedSpecificOrigins";
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -33,6 +40,7 @@ namespace Queries.Api
         {
             var handlersAssembly = typeof(GetAllPersonHandler).GetTypeInfo().Assembly;
             services.AddMediatR(Assembly.GetExecutingAssembly(), handlersAssembly);
+            
 
             services.AddScoped<IElasticClient>(s =>
             {
@@ -46,19 +54,58 @@ namespace Queries.Api
                 return new ElasticClient(settings);
             });
 
+            // Account
             services.AddKafkaConsumer<UpdateAccountProjectionMessage, UpdateAccountProjectionHandler>(
-                KafkaSettings.ProjectionTopics.AccountTopicName,
+                KafkaSettings.ProjectionTopics.UpdateAccountTopicName,
                 KafkaSettings.Groups.BusinessGroupId);
 
+            services.AddKafkaConsumer<SaveAccountProjectionMessage, SaveAccountProjectionHandler>(
+                KafkaSettings.ProjectionTopics.SaveAccountTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
+
+            services.AddKafkaConsumer<DeleteAccountProjectionMessage, DeleteAccountProjectionHandler>(
+                KafkaSettings.ProjectionTopics.DeleteAccountTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
+
+
+            // payment 
             services.AddKafkaConsumer<UpdatePaymentProjectionMessage, UpdatePaymentProjectionHandler>(
-                KafkaSettings.ProjectionTopics.PaymentTopicName,
+                KafkaSettings.ProjectionTopics.UpdatePaymentTopicName,
                 KafkaSettings.Groups.BusinessGroupId);
 
+            services.AddKafkaConsumer<SavePaymentProjectionMessage, SavePaymentProjectionHandler>(
+                KafkaSettings.ProjectionTopics.SavePaymentTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
+
+            services.AddKafkaConsumer<DeletePaymentProjectionMessage, DeletePaymentProjectionHandler>(
+                KafkaSettings.ProjectionTopics.DeletePaymentTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
+
+            // person
             services.AddKafkaConsumer<UpdatePersonProjectionMessage, UpdatePersonProjectionHandler>(
-                KafkaSettings.ProjectionTopics.PersonTopicName,
+                KafkaSettings.ProjectionTopics.UpdatePersonTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
+
+            services.AddKafkaConsumer<SavePersonProjectionMessage, SavePersonProjectionHandler>(
+                KafkaSettings.ProjectionTopics.SavePersonTopicName,
+                KafkaSettings.Groups.BusinessGroupId);
+
+            services.AddKafkaConsumer <DeletePersonProjectionMessage, DeletePersonProjectionHandler>(
+                KafkaSettings.ProjectionTopics.DeletePersonTopicName,
                 KafkaSettings.Groups.BusinessGroupId);
 
             services.AddElasticDataAccessObjects();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: AllowedSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:3009");//Accounting-ui
+                                  });
+            });
+
+            services.AddHostedService<Worker>();
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -70,9 +117,19 @@ namespace Queries.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
-            IKafkaConsumer<UpdateAccountProjectionMessage> kafkaAccountConsumer,
-            IKafkaConsumer<UpdatePaymentProjectionMessage> kafkaPaymentConsumer,
-            IKafkaConsumer<UpdatePersonProjectionMessage> kafkaPersonConsumer,
+            /*
+            IKafkaConsumer<UpdateAccountProjectionMessage> kafkaUpdateAccountConsumer,
+            IKafkaConsumer<SaveAccountProjectionMessage> kafkaSaveAccountConsumer,
+            IKafkaConsumer<DeleteAccountProjectionMessage> kafkaDeleteAccountConsumer,
+
+            IKafkaConsumer<UpdatePaymentProjectionMessage> kafkaUpdatePaymentConsumer,
+            IKafkaConsumer<SavePaymentProjectionMessage> kafkaSavePaymentConsumer,
+            IKafkaConsumer<DeletePaymentProjectionMessage> kafkaDeletePaymentConsumer,
+
+            IKafkaConsumer<UpdatePersonProjectionMessage> kafkaUpdatePersonConsumer,
+            IKafkaConsumer<SavePersonProjectionMessage> kafkaSavePersonConsumer,
+            IKafkaConsumer<DeletePersonProjectionMessage> kafkaDeletePersonConsumer,
+            */
             IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -82,18 +139,30 @@ namespace Queries.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Queries.Api v1"));
             }
 
-            CancellationTokenSource cts = new CancellationTokenSource();
-            CancellationToken stoppingToken = cts.Token;
+            //CancellationTokenSource cts = new CancellationTokenSource();
+            //CancellationToken stoppingToken = cts.Token;
+            
+            /*
+            kafkaUpdateAccountConsumer.Consume(stoppingToken);
+            kafkaSaveAccountConsumer.Consume(stoppingToken);
+            kafkaDeleteAccountConsumer.Consume(stoppingToken);
 
-            kafkaAccountConsumer.Consume(stoppingToken);
-            kafkaPaymentConsumer.Consume(stoppingToken);
-            kafkaPersonConsumer.Consume(stoppingToken);
+            kafkaUpdatePaymentConsumer.Consume(stoppingToken);
+            kafkaSavePaymentConsumer.Consume(stoppingToken);
+            kafkaDeletePaymentConsumer.Consume(stoppingToken);
+            
+            kafkaUpdatePersonConsumer.Consume(stoppingToken);
+            kafkaSavePersonConsumer.Consume(stoppingToken);
+            kafkaDeletePersonConsumer.Consume(stoppingToken);
+            */
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors(AllowedSpecificOrigins);
 
             app.UseEndpoints(endpoints =>
             {

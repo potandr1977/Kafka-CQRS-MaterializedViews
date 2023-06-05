@@ -2,7 +2,7 @@
 using Domain.Models;
 using Domain.Services;
 using EventBus.Kafka.Abstraction;
-using Messages;
+using Messages.Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +14,22 @@ namespace Business
     {
         private readonly IAccountDao _accountDao;
         private readonly IPaymentService _paymentService;
-        private readonly IKafkaProducer<UpdateAccountProjectionMessage> _kafkaAccountProducer;
+        private readonly IKafkaProducer<UpdateAccountProjectionMessage> _kafkaUpdateAccountProducer;
+        private readonly IKafkaProducer<SaveAccountProjectionMessage> _kafkaSaveAccountProducer;
+        private readonly IKafkaProducer<DeleteAccountProjectionMessage> _kafkaDeleteAccountProducer;
 
         public AccountService(
             IAccountDao accountDao,
             IPaymentService paymentService,
-            IKafkaProducer<UpdateAccountProjectionMessage> kafkaProducer)
+            IKafkaProducer<UpdateAccountProjectionMessage> kafkaUpdateAccountProducer,
+            IKafkaProducer<SaveAccountProjectionMessage> kafkaSaveAccountProducer,
+            IKafkaProducer<DeleteAccountProjectionMessage> kafkaDeleteAccountProducer)
         {
             _accountDao = accountDao;
             _paymentService = paymentService;
-            _kafkaAccountProducer = kafkaProducer;
+            _kafkaUpdateAccountProducer = kafkaUpdateAccountProducer ?? throw new NullReferenceException(nameof(kafkaUpdateAccountProducer));
+            _kafkaSaveAccountProducer = kafkaSaveAccountProducer ?? throw new NullReferenceException(nameof(kafkaUpdateAccountProducer));
+            _kafkaDeleteAccountProducer = kafkaDeleteAccountProducer ?? throw new NullReferenceException(nameof(kafkaDeleteAccountProducer));
         }
 
         public Task AddPaymentToAccount(Guid accountId, Payment payment)
@@ -45,6 +51,11 @@ namespace Business
             }
 
             await _accountDao.DeleteById(id);
+
+            await _kafkaDeleteAccountProducer.ProduceAsync(new DeleteAccountProjectionMessage
+            {
+                Id = id.ToString(),
+            });
         }
 
         public Task<(int totalPages, IReadOnlyList<Account> data)> GetPage(int pageNo, int PageSize) => _accountDao.GetPage(pageNo, PageSize);
@@ -57,13 +68,13 @@ namespace Business
         {
             await _accountDao.CreateAsync(account);
 
-            await _kafkaAccountProducer.ProduceAsync(new UpdateAccountProjectionMessage
+            await _kafkaSaveAccountProducer.ProduceAsync(new SaveAccountProjectionMessage
             {
                 Id = Guid.NewGuid().ToString(),
                 AccountId = account.Id,
                 Name = account.Name,
                 PersonId = account.PersonId,
-                TimeStamp= account.CreateDate,
+                TimeStamp= account.TimeStamp,
             });
         }
 
@@ -71,9 +82,9 @@ namespace Business
         {
             var stamped = await _accountDao.UpdateAsync(account);
 
-            await _kafkaAccountProducer.ProduceAsync(new UpdateAccountProjectionMessage
+            await _kafkaUpdateAccountProducer.ProduceAsync(new UpdateAccountProjectionMessage
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = $"{account.Id}",
                 AccountId = stamped.Id,
                 Name = stamped.Name,
                 PersonId = stamped.PersonId,
