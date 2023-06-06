@@ -4,7 +4,6 @@ using MongoDB.Driver;
 using Settings;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -12,7 +11,7 @@ namespace DataAccess.Mongo
 {
     public class PaymentDao : Dao<Payment>, IPaymentDao
     {
-        public PaymentDao(IMongoClient mongoClient) : base(mongoClient)
+        public PaymentDao(IMongoClient mongoClient) : base(mongoClient, MongoSettings.PaymentsCollectionName)
         { 
         }
 

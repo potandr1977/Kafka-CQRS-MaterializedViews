@@ -1,6 +1,7 @@
 ﻿using Domain.DataAccess;
 using Domain.Models;
 using MongoDB.Driver;
+using Settings;
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
@@ -10,7 +11,7 @@ namespace DataAccess.Mongo
 {
     public class AccountDao :  Dao<Account>, IAccountDao
     {
-        public AccountDao(IMongoClient mongoClient) : base(mongoClient)
+        public AccountDao(IMongoClient mongoClient) : base(mongoClient, MongoSettings.AccountsCollectionName)
         { 
         }
 
