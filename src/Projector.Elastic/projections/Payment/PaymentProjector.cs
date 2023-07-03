@@ -38,7 +38,8 @@ namespace Projector.Elastic.projections.Payment
             {
                 Id = message.PaymentId,
                 AccountName = accountMongo?.Name,
-                PaymentType = message.PaymentType.GetDescription<Queries.Core.Enums.PaymentTypeEnum>(),
+                PaymentTypeId = message.PaymentType,
+                PaymentTypeName = message.PaymentType.GetDescription<Queries.Core.Enums.PaymentTypeEnum>(),
                 Sum = message.Sum,
                 TimeStamp = message.TimeStamp,
             };
@@ -62,7 +63,8 @@ namespace Projector.Elastic.projections.Payment
             {
                 Id = message.PaymentId,
                 AccountName = accountMongo?.Name,
-                PaymentType = message.PaymentType.GetDescription<Queries.Core.Enums.PaymentTypeEnum>(),
+                PaymentTypeId = message.PaymentType,
+                PaymentTypeName = message.PaymentType.GetDescription<Queries.Core.Enums.PaymentTypeEnum>(),
                 Sum = message.Sum,
                 TimeStamp = message.TimeStamp,
             };

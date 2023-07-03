@@ -68,7 +68,7 @@ namespace DataAccess.Elastic
                         .Params(p => p
                              .Add("accountName", payment.AccountName)
                              .Add("sum", payment.Sum)
-                             .Add("paymentType", payment.PaymentType)
+                             .Add("paymentType", payment.PaymentTypeName)
                              .Add("timeStamp", payment.TimeStamp)
                 )).Conflicts(Conflicts.Proceed));
 
