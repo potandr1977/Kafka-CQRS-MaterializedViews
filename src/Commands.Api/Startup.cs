@@ -34,9 +34,6 @@ namespace Commands.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //var handlersAssembly = typeof(CreatePersonHandler).GetTypeInfo().Assembly;
-            //services.AddMediatR(Assembly.GetExecutingAssembly(), handlersAssembly);
-
             services.AddMediatR(config => {
                 config.RegisterServicesFromAssemblyContaining<Program>();
                 config.RegisterServicesFromAssemblyContaining<CreatePersonHandler>();
@@ -44,27 +41,11 @@ namespace Commands.Api
                 // Setting the publisher directly will make the instance a Singleton.
                 config.NotificationPublisher = new TaskWhenAllPublisher();
 
-                // Seting the publisher type will:
-                // 1. Override the value set on NotificationPublisher
-                // 2. Use the service lifetime from the ServiceLifetime property below
                 config.NotificationPublisherType = typeof(TaskWhenAllPublisher);
 
-                //config.ServiceLifetime = ServiceLifetime.Transient;
+                config.Lifetime = ServiceLifetime.Transient;
             });
-            /*
-            services.AddMediatR(typeof(Startup));
-            services.Scan(scan =>
-            {
-                scan
-                    .FromAssemblies(Assembly.Load($"{nameof(Application)}"))
-                    .AddClasses(classes => classes
-                        .AssignableTo(typeof(IPipelineBehavior<,>)))
-                    .AsImplementedInterfaces()
-                    .WithSingletonLifetime();
-
-            });
-            */
-
+            
             services.AddClients();
             services.AddRetryPolicy();
 
