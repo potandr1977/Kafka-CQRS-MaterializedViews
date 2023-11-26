@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Messages.Payment
+namespace Messages.Payments
 {
     public record UpdatePaymentProjectionMessage : ProjectionMessage
     {

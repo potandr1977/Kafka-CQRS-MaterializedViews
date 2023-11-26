@@ -1,6 +1,6 @@
 ﻿using Domain.DataAccess;
 using EventBus.Kafka.Abstraction;
-using Messages.Payment;
+using Messages.Payments;
 using Queries.Core.dataaccess;
 using SimpleViewProjector.Elastic.Extensions;
 using System;
@@ -38,7 +38,8 @@ namespace Projector.Elastic.projections.Payment
             {
                 Id = message.PaymentId,
                 AccountName = accountMongo?.Name,
-                PaymentType = message.PaymentType.GetDescription<Queries.Core.Enums.PaymentTypeEnum>(),
+                PaymentTypeId = message.PaymentType,
+                PaymentTypeName = message.PaymentType.GetDescription<Queries.Core.Enums.PaymentTypeEnum>(),
                 Sum = message.Sum,
                 TimeStamp = message.TimeStamp,
             };
@@ -62,7 +63,8 @@ namespace Projector.Elastic.projections.Payment
             {
                 Id = message.PaymentId,
                 AccountName = accountMongo?.Name,
-                PaymentType = message.PaymentType.GetDescription<Queries.Core.Enums.PaymentTypeEnum>(),
+                PaymentTypeId = message.PaymentType,
+                PaymentTypeName = message.PaymentType.GetDescription<Queries.Core.Enums.PaymentTypeEnum>(),
                 Sum = message.Sum,
                 TimeStamp = message.TimeStamp,
             };

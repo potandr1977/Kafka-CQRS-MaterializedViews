@@ -1,5 +1,4 @@
-﻿using Queries.Core.Enums;
-using System;
+﻿using System;
 
 namespace Queries.Core.models
 {
@@ -11,7 +10,9 @@ namespace Queries.Core.models
 
         public decimal Sum { get; init; }
 
-        public string PaymentType { get; init; }
+        public int PaymentTypeId { get; init; }
+
+        public string PaymentTypeName { get; init; }
 
         public long TimeStamp { get; init; }
     }

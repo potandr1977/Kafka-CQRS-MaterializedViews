@@ -1,5 +1,5 @@
 ﻿using EventBus.Kafka.Abstraction.Abstraction;
-using Messages.Person;
+using Messages.Persons;
 using Projector.Elastic.projections.Person;
 using System.Threading.Tasks;
 

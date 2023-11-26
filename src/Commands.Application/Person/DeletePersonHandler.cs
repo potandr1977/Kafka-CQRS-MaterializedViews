@@ -15,11 +15,9 @@ namespace Commands.Application.Commands
             _personService = paymentService;
         }
 
-        public async Task<Unit> Handle(DeletePersonCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeletePersonCommand request, CancellationToken cancellationToken)
         {
             await _personService.DeleteById(request.Id);
-            
-            return Unit.Value;
         }
     }
 }

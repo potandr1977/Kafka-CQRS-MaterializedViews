@@ -14,12 +14,17 @@ namespace DataAccess.Mongo
         where T : OptimisticEntity, new()
     {
         protected readonly IMongoDatabase database;
+        protected readonly string collectionName;
 
         protected abstract Expression<Func<T, object>> GetSortFieldDef();
 
-        protected IMongoCollection<T> Collection => database.GetCollection<T>(MongoSettings.AccountsCollectionName);
+        protected IMongoCollection<T> Collection => database.GetCollection<T>(collectionName);
 
-        public Dao(IMongoClient mongoClient) => database = mongoClient.GetDatabase(MongoSettings.DbName);
+        public Dao(IMongoClient mongoClient, string collectionName)
+        {
+            database = mongoClient.GetDatabase(MongoSettings.DbName);
+            this.collectionName = collectionName;
+        }
 
 
         public async Task CreateAsync(T model) => 

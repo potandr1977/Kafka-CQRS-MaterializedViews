@@ -1,4 +1,4 @@
-﻿using Messages.Payment;
+﻿using Messages.Payments;
 using System.Threading.Tasks;
 
 namespace Projector.Elastic.projections.Payment

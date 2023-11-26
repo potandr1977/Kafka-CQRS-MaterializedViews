@@ -12,11 +12,9 @@ namespace Commands.Application.Commands
 
         public DeletePaymentHandler(IPaymentService paymentService) => _paymentService = paymentService;
 
-        public async Task<Unit> Handle(DeletePaymentCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeletePaymentCommand request, CancellationToken cancellationToken)
         {
             await _paymentService.DeleteById(request.Id);
-
-            return Unit.Value;
         }
     }
 }

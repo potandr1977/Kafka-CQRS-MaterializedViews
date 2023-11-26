@@ -49,11 +49,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_loading", "_loading", "{86
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LoadingConsole", "src\LoadingConsole\LoadingConsole.csproj", "{75FFB45D-B232-4E51-9012-39539CCB9D17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Clients", "src\Infrastructure.Clients\Infrastructure.Clients.csproj", "{A18CBE8D-7AF0-47E8-B9CC-F253E364B261}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Clients", "src\Infrastructure.Clients\Infrastructure.Clients.csproj", "{A18CBE8D-7AF0-47E8-B9CC-F253E364B261}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_integration", "_integration", "{7DDFF761-6C74-43CB-A1AD-4D198CBA4AE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExchangeRateApi", "src\ExchangeRateApi\ExchangeRateApi.csproj", "{6730238D-8447-422B-8750-356E240A4502}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExchangeRateApi", "src\ExchangeRateApi\ExchangeRateApi.csproj", "{6730238D-8447-422B-8750-356E240A4502}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

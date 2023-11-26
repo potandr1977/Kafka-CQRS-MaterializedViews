@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Commands.Application.Notifications;
+using Domain.Models;
 using Domain.Services;
 using MediatR;
 using System;
@@ -10,10 +11,12 @@ namespace Commands.Application.Commands
     public class CreatePaymentHandler : IRequestHandler<CreatePaymentCommand, Guid>
     {
         private readonly IPaymentService _paymentService;
+        private readonly IMediator _mediator;
 
-        public CreatePaymentHandler(IPaymentService paymentService)
+        public CreatePaymentHandler(IPaymentService paymentService, IMediator mediator)
         {
-            _paymentService = paymentService;
+            _paymentService = paymentService ?? throw new ArgumentNullException(nameof(paymentService));
+            _mediator = mediator ?? throw new ArgumentNullException(nameof(_mediator));
         }
 
         public async Task<Guid> Handle(CreatePaymentCommand request, CancellationToken cancellationToken)
@@ -29,6 +32,15 @@ namespace Commands.Application.Commands
             };
 
             await _paymentService.Create(payment);
+
+
+            await _mediator.Publish(new PaymentCreatedNotification 
+            { 
+                Id = newGuid,
+                AccountId = request.AccountId,
+                Sum = request.Sum
+            });
+           
 
             return newGuid;
         }

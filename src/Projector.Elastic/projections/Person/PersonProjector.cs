@@ -1,5 +1,5 @@
 ﻿using EventBus.Kafka.Abstraction;
-using Messages.Person;
+using Messages.Persons;
 using Queries.Core.dataaccess;
 using System;
 using System.Threading.Tasks;
