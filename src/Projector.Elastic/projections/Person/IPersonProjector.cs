@@ -1,4 +1,4 @@
-﻿using Messages.Person;
+﻿using Messages.Persons;
 using System.Threading.Tasks;
 
 namespace Projector.Elastic.projections.Person

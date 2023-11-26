@@ -13,11 +13,9 @@ namespace Commands.Application.Commands
 
         public DeleteAccountHandler(IAccountService accountService) => _accountService = accountService;
 
-        public async Task<Unit> Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
+        public async Task Handle(DeleteAccountCommand request, CancellationToken cancellationToken)
         {
             await _accountService.DeleteById(request.Id);
-
-            return Unit.Value;
         }
     }
 }

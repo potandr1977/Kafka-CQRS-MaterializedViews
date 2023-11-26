@@ -12,7 +12,7 @@ namespace Commands.Application.Commands
 
         public UpdatePaymentHandler(IPaymentService paymentService) => _paymentService = paymentService;
 
-        public async Task<Unit> Handle(UpdatePaymentCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdatePaymentCommand request, CancellationToken cancellationToken)
         {
             var payment = new Payment
             {
@@ -24,8 +24,6 @@ namespace Commands.Application.Commands
             };
 
             await _paymentService.Update(payment);
-
-            return Unit.Value;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using EventBus.Kafka.Abstraction.Abstraction;
-using Messages.Payment;
+using Messages.Payments;
 using Projector.Elastic.projections.Payment;
 using System.Threading.Tasks;
 

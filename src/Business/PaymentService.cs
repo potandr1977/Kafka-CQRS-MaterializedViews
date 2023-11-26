@@ -1,10 +1,11 @@
 ﻿using DataAccess.DataAccess;
+using Domain.exceptions;
 using Domain.Models;
 using Domain.Services;
 using EventBus.Kafka.Abstraction;
 using Infrastructure.Clients;
 using Messages.Account;
-using Messages.Payment;
+using Messages.Payments;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -86,18 +87,24 @@ namespace Business
             var rate = await _exchangeRateService.GetAccessRateAsync();
 
             var paymentRated = payment with { Sum = payment.Sum * rate };
-
-            var stamped =  await _paymentDao.UpdateAsync(paymentRated);
-
-            await _kafkaUpdatePaymentProducer.ProduceAsync(new UpdatePaymentProjectionMessage
+            try
             {
-                Id = Guid.NewGuid().ToString(),
-                PaymentId = stamped.Id,
-                AccountId = stamped.AccountId,
-                PaymentType = (int)stamped.PaymentType,
-                Sum = stamped.Sum,
-                TimeStamp = stamped.TimeStamp,
-            });
+                var stamped = await _paymentDao.UpdateAsync(paymentRated);
+
+                await _kafkaUpdatePaymentProducer.ProduceAsync(new UpdatePaymentProjectionMessage
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    PaymentId = stamped.Id,
+                    AccountId = stamped.AccountId,
+                    PaymentType = (int)stamped.PaymentType,
+                    Sum = stamped.Sum,
+                    TimeStamp = stamped.TimeStamp,
+                });
+            }
+            catch (ConcurentOldVersionUpdateException)
+            { 
+
+            }
         }
     }
 }

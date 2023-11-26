@@ -12,7 +12,7 @@ namespace Commands.Application.Commands
 
         public UpdatePersonHandler(IPersonService paymentService) => _personService = paymentService;
 
-        public async Task<Unit> Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdatePersonCommand request, CancellationToken cancellationToken)
         {
             var person = new Person
             {
@@ -23,8 +23,6 @@ namespace Commands.Application.Commands
             };
 
             await _personService.Update(person);
-
-            return Unit.Value;
         }
     }
 }

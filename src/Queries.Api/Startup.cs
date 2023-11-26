@@ -2,8 +2,8 @@ using DataAccess.Elastic.Configure;
 using EventBus.Kafka.Abstraction;
 using MediatR;
 using Messages.Account;
-using Messages.Payment;
-using Messages.Person;
+using Messages.Payments;
+using Messages.Persons;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -117,19 +117,7 @@ namespace Queries.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app,
-            /*
-            IKafkaConsumer<UpdateAccountProjectionMessage> kafkaUpdateAccountConsumer,
-            IKafkaConsumer<SaveAccountProjectionMessage> kafkaSaveAccountConsumer,
-            IKafkaConsumer<DeleteAccountProjectionMessage> kafkaDeleteAccountConsumer,
-
-            IKafkaConsumer<UpdatePaymentProjectionMessage> kafkaUpdatePaymentConsumer,
-            IKafkaConsumer<SavePaymentProjectionMessage> kafkaSavePaymentConsumer,
-            IKafkaConsumer<DeletePaymentProjectionMessage> kafkaDeletePaymentConsumer,
-
-            IKafkaConsumer<UpdatePersonProjectionMessage> kafkaUpdatePersonConsumer,
-            IKafkaConsumer<SavePersonProjectionMessage> kafkaSavePersonConsumer,
-            IKafkaConsumer<DeletePersonProjectionMessage> kafkaDeletePersonConsumer,
-            */
+            
             IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -138,23 +126,6 @@ namespace Queries.Api
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Queries.Api v1"));
             }
-
-            //CancellationTokenSource cts = new CancellationTokenSource();
-            //CancellationToken stoppingToken = cts.Token;
-            
-            /*
-            kafkaUpdateAccountConsumer.Consume(stoppingToken);
-            kafkaSaveAccountConsumer.Consume(stoppingToken);
-            kafkaDeleteAccountConsumer.Consume(stoppingToken);
-
-            kafkaUpdatePaymentConsumer.Consume(stoppingToken);
-            kafkaSavePaymentConsumer.Consume(stoppingToken);
-            kafkaDeletePaymentConsumer.Consume(stoppingToken);
-            
-            kafkaUpdatePersonConsumer.Consume(stoppingToken);
-            kafkaSavePersonConsumer.Consume(stoppingToken);
-            kafkaDeletePersonConsumer.Consume(stoppingToken);
-            */
 
             app.UseHttpsRedirection();
 

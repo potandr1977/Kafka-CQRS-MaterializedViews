@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Messages.Person
+namespace Messages.Persons
 {
     public record DeletePersonProjectionMessage : ProjectionMessage
     {

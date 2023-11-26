@@ -1,6 +1,6 @@
 ﻿using Domain.DataAccess;
 using EventBus.Kafka.Abstraction;
-using Messages.Payment;
+using Messages.Payments;
 using Queries.Core.dataaccess;
 using SimpleViewProjector.Elastic.Extensions;
 using System;

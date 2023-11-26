@@ -12,7 +12,7 @@ namespace Commands.Application.Commands
 
         public UpdateAccountHandler(IAccountService accountService) => _accountService = accountService;
 
-        public async Task<Unit> Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
+        public async Task Handle(UpdateAccountCommand request, CancellationToken cancellationToken)
         {
             var account = new Account
             {
@@ -23,8 +23,6 @@ namespace Commands.Application.Commands
             };
 
             await _accountService.Update(account);
-
-            return Unit.Value;
         }
     }
 }
